@@ -1,0 +1,29 @@
+[
+    {"country_id":"1","sortname":"AF","country_name":"Afghanistan","states":[
+     {"state_id":"42","state_name":"Badakhshan","country_id":"1"},
+     {"state_id":"43","state_name":"Badgis","country_id":"1"},
+     {"state_id":"44","state_name":"Baglan","country_id":"1"}
+     
+
+    ]},
+    {"country_id":"2","sortname":"AL","country_name":"Albania","states":[
+     {"state_id":"74","state_name":"Berat","country_id":"2"},
+{"state_id":"75","state_name":"Bulqize","country_id":"2"},
+{"state_id":"76","state_name":"Delvine","country_id":"2"},
+{"state_id":"77","state_name":"Devoll","country_id":"2"}
+    ]},
+    {"country_id":"3","sortname":"DZ","country_name":"Algeria", "states":[
+     {"state_id":"110","state_name":"Ayn Daflah","country_id":"3"},
+{"state_id":"111","state_name":"Ayn Tamushanat","country_id":"3"},
+{"state_id":"112","state_name":"Adrar","country_id":"3"}
+    ]},
+
+
+    {"country_id":"4","sortname":"AS","country_name":"American Samoa","states":[
+     {"state_id":"164","state_name":"Eastern","country_id":"4"},
+{"state_id":"165","state_name":"Manu'a","country_id":"4"},
+{"state_id":"166","state_name":"Swains Island","country_id":"4"},
+{"state_id":"167","state_name":"Western","country_id":"4"}
+    ]}
+    
+]
