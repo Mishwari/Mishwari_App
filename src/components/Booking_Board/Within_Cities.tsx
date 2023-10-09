@@ -88,7 +88,7 @@ function Within_Cities() {
           </select>
         </div>
 
-        <h1 className='font-semibold text-md text-[#676767] pt-6 -ml-4'>Method</h1>
+        <h1 className='font-semibold text-md text-[#676767] pt-6 -ml-4'>Methods</h1>
         <div className='flex gap-x-2 pt-4'>
           {
             SvgIcons.map((item: any) => {
