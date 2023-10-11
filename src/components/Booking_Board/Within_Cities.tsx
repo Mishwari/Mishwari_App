@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Testdata from '../testdata.json'
 import Image from 'next/image';
+import {useRouter} from 'next/router'
 
 
 function Within_Cities() {
@@ -29,9 +30,10 @@ function Within_Cities() {
     }
     // console.log(selectedMethods)
   }
-
+  const router = useRouter()
   const handleSubmit = () => {
-    alert("Selected Country:" + " " + selectCity + +"," + " From: " + " " + selectFrom + ", " + "To: " + " " + selectTo + " ," + "Travel Method by:" + " " + selectedMethods);
+    router.push(`/bus_list?city=${selectCity}pickup=${selectFrom}&destination=${selectTo}`)
+    // alert("Selected Country:" + " " + selectCity + +"," + " From: " + " " + selectFrom + ", " + "To: " + " " + selectTo + " ," + "Travel Method by:" + " " + selectedMethods);
   };
 
   return (
