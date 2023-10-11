@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import Testdata from '../testdata.json'
 import Image from 'next/image';
+
+
 function Within_Cities() {
+
   const [stateName, setStateName] = useState<string[]>([]);
   const [Countrystate, setCountrystate] = useState([]);
   const [selectCity, setSelectCity] = useState<string>('');
   const [selectFrom, setSelectFrom] = useState<string>('');
   const [selectTo, setSelectTo] = useState<string>('');
-  const [TravelMethod, setTravelMethod] = useState<string>('');
+  const [selectedMethods, setselectedMethods] = useState<string[]>([])
 
   const Toggle_Selected_City = (e: any) => {
     const getCountryName = e.target.value;
@@ -16,31 +19,20 @@ function Within_Cities() {
     setCountrystate(selectedcity);
     setStateName(selectedcity.states);
   };
-  const handleSubmit = () => {
-    alert("Selected Country: " + selectCity + " From: " + selectFrom + " To: " + selectTo + "Travel Method by:" + TravelMethod);
-  };
 
-  function OnTarvelModeChanged(e: any) {
-    const res = e.target.value
-    setTravelMethod(res);
+  const OnTarvelModeSelected = (e: any) => {
+    const selectedvalue = e.target.value;
+    if (e.target.checked) {
+      setselectedMethods((prevValue: any) => [...prevValue, selectedvalue])
+    } else {
+      setselectedMethods((prevValue) => prevValue.filter((item) => item !== selectedvalue))
+    }
+    // console.log(selectedMethods)
   }
-  const SvgIcons = [
-    {
-      id: "svg-1",
-      SvgName: "BulkaBus",
-      SvgLink: "/bulka_bus.svg"
-    },
-    {
-      id: "svg-2",
-      SvgName: "Car",
-      SvgLink: "/car.svg"
-    },
-    {
-      id: "svg-3",
-      SvgName: "Bike",
-      SvgLink: "/bike.svg"
-    },
-  ]
+
+  const handleSubmit = () => {
+    alert("Selected Country:" + " " + selectCity + +"," + " From: " + " " + selectFrom + ", " + "To: " + " " + selectTo + " ," + "Travel Method by:" + " " + selectedMethods);
+  };
 
   return (
     <div className='text-[#101010] px-4'>
@@ -90,18 +82,23 @@ function Within_Cities() {
 
         <h1 className='font-semibold text-md text-[#676767] pt-6 -ml-4'>Methods</h1>
         <div className='flex gap-x-2 pt-4'>
-          {
-            SvgIcons.map((item: any) => {
-              return (
-                <div onChange={OnTarvelModeChanged} className={`border   w-fit h-14 rounded-lg border-[#005687] bg-[#cbd8df]`}>
-                  <input type='radio' value={item.SvgName} checked={TravelMethod === item.SvgName} />
-                  <label ><Image alt='bulka_bus' src={item.SvgLink} height={1} width={1} className=' h-20 pt-4 w-20 pb-2 ' /></label>
-                </div>
-              )
-            })
-          }
+
+          <label className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${selectedMethods.includes('bulkabus') ? 'bg-[#005687] border-2 border-black' : 'bg-[#e2e1e1]'}`}>
+            <input onChange={(e)=>OnTarvelModeSelected(e)} type="checkbox" value="bulkabus" className=' hidden checked:bg-black' />
+            <Image alt='bulkabus' src="./bulka_bus.svg" height={20} width={20} className='h-14 w-16 mt-7 ' />
+          </label>
+
+          <label className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${selectedMethods.includes('Car') ? 'bg-[#005687] border-2 border-black' : 'bg-[#e2e1e1]'}`}>
+            <input onChange={(e)=>OnTarvelModeSelected(e)} type="checkbox" value="Car" className=' hidden checked:bg-black' />
+            <Image alt='car' src="./car.svg" height={20} width={20} className='h-14 w-16 mt-7 ' />
+          </label>
+
+          <label className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${selectedMethods.includes('Bike') ? 'bg-[#005687] border-2 border-black' : 'bg-[#e2e1e1]'}`}>
+            <input onChange={(e)=>OnTarvelModeSelected(e)} type="checkbox" value="Bike" className=' hidden checked:bg-black' />
+            <Image alt='bulkabus' src="./bike.svg" height={20} width={20} className='h-14 w-16 mt-7 ' />
+          </label>
         </div>
-        <button type='submit' className='border-2 mt-12 p-3 w-40  border-black bg-[#005687] text-white  rounded-lg '>Search Trips</button>
+        <button type='submit' className='border-2 mt-12 p-3 w-40 border-black bg-[#005687] text-white  rounded-lg '>Search Trips</button>
       </form>
     </div>
   )
