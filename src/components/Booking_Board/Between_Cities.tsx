@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
 import Testdata from '../testdata.json'
 import Image from 'next/image';
+import { format } from 'date-fns';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 function Between_Cities() {
 
-  const [stateName, setStateName] = useState<string[]>([]);
   const [Countrystate, setCountrystate] = useState([]);
-  const [selectCity, setSelectCity] = useState<string>('');
-  const [selectFrom, setSelectFrom] = useState<string>('');
-  const [selectTo, setSelectTo] = useState<string>('');
+  const [selectfromCity, setselectfromCity] = useState<string>('');
+  const [selecttoCity, setselecttoCity] = useState<string>('');
   const [selectedMethods, setselectedMethods] = useState<string[]>([])
+  const [selectedDate, setSelectedDate] = useState<Date>();
 
-
+  const Toggle_Selected_City = (e: any) => {
+    const getCountryName = e.target.value;
+    const selectedcity: any = Testdata?.find((x) => x.country_name === getCountryName);
+    console.log("selected City: ", selectedcity);
+    setCountrystate(selectedcity);
+  
+  };
 
   const OnTarvelModeSelected = (e: any) => {
     const selectedvalue = e.target.value;
@@ -19,11 +27,11 @@ function Between_Cities() {
     } else {
       setselectedMethods((prevValue) => prevValue.filter((item) => item !== selectedvalue))
     }
+    console.log(selectedMethods)
   }
 
-  console.log(selectedMethods)
   const handleSubmit = () => {
-    alert("Selected Country:" + " " + selectCity + +"," + " From: " + " " + selectFrom + ", " + "To: " + " " + selectTo + " ," + "Travel Method by:" + " " + selectedMethods);
+    alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
   };
   return (
     <div className='text-[#101010] px-4'>
@@ -31,29 +39,45 @@ function Between_Cities() {
         onSubmit={handleSubmit}
       >
         <div>
-          <h1 className='font-semibold text-md text-[#676767] pt-6'>From</h1>
-          <select value={selectFrom} onChange={
+          <h1 className='font-semibold text-md text-[#676767]'>from</h1>
+          <select value={selectfromCity} onChange={
             (e: React.ChangeEvent<HTMLSelectElement>) => {
-              setSelectFrom(e.target.value)
-            }}
+              Toggle_Selected_City(e);
+              setselectfromCity(e.target.value);
+            }
+          }
             className='border-b py-1 text-lg font-medium text-[#676767] w-64 h-8 border-[#005687]'
           >
-            {stateName?.map((item: any, index) => {
-              return (<option value={item.state_name} key={index}>{item.state_name}</option>)
+            {Testdata?.map((item, index) => {
+              return (<option value={item.country_name} key={index}>{item.country_name}</option>)
             })}
           </select>
         </div>
 
         <div>
-          <h1 className='font-semibold text-md text-[#676767] pt-6'>To</h1>
-          <select value={selectTo} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { setSelectTo(e.target.value) }}
+          <h1 className='font-semibold text-md text-[#676767]'>to</h1>
+          <select value={selecttoCity} onChange={
+            (e: React.ChangeEvent<HTMLSelectElement>) => {
+              Toggle_Selected_City(e);
+              setselecttoCity(e.target.value);
+            }
+          }
             className='border-b py-1 text-lg font-medium text-[#676767] w-64 h-8 border-[#005687]'
           >
-            {stateName?.map((item: any, index) => {
-              return (<option value={item.state_name} key={index}>{item.state_name}</option>)
+            {Testdata?.map((item, index) => {
+              return (<option value={item.country_name} key={index}>{item.country_name}</option>)
             })}
           </select>
         </div>
+        {/* <div>
+          <h1 className='font-semibold text-md text-[#676767] pt-6'>Departure date</h1>
+          <div>
+          <DayPicker
+      mode="single"
+      selected={selectedDate}
+    />
+          </div>
+        </div> */}
 
         <h1 className='font-semibold text-md text-[#676767] pt-6 -ml-4'>Methods</h1>
         <div className='flex gap-x-2 pt-4'>
