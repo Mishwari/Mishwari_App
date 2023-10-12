@@ -4,6 +4,12 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
+import {useRouter} from 'next/router'
+
+
+
+
+
 function Between_Cities() {
 
   const [Countrystate, setCountrystate] = useState([]);
@@ -30,8 +36,15 @@ function Between_Cities() {
     console.log(selectedMethods)
   }
 
-  const handleSubmit = () => {
-    alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
+
+  const router = useRouter()
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push({
+      pathname: '/bus_list',
+      query:{tripType: 2,  city:'', pickup: selectfromCity, destination: selecttoCity}
+    })
+    // alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
   };
   return (
     <div className='text-[#101010] px-4'>

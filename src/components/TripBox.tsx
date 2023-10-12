@@ -28,7 +28,7 @@ function TripBox({ trip }: TripProps) {
     <div
       className='mt-5 justify-center sm:flex sm:gap-64 '
       style={{
-        border: ' 0.5px solid #A4A4A4;',
+        border: ' 0.5px solid #A4A4A4',
         borderRadius: '12px',
       }}>
       <div className='flex justify-between md:gap-9 items-center p-4'>

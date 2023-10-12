@@ -78,7 +78,7 @@
         "tid":5,
         "trip_type":2, 
         "busName":"LazyLine Travels",
-        "pickup":"AL_Mukalla",
+        "pickup":"AL-Mukalla",
         "destination":"Seiyon",
         "departure_time":"06:30 PM",
         "arrival_time":"10:30 AM",
@@ -91,6 +91,24 @@
             "wifi":false,
             "ac":false,
             "charger":true
+        }
+    },{
+        "tid":6,
+        "trip_type":2, 
+        "busName":"LazyLine Travels",
+        "pickup":"AL-Mukalla",
+        "destination":"Aden",
+        "departure_time":"06:30 PM",
+        "arrival_time":"10:30 AM",
+        "cost":19000,
+        "rate":4.1,
+        "bus_type":"mass",
+        "path":"inner",
+        "seats":6,
+        "features":{
+            "wifi":true,
+            "ac":false,
+            "charger":false
         }
     }
 ]

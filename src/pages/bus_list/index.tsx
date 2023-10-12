@@ -1,28 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Mousewheel, FreeMode } from 'swiper/modules';
 import Trips from '../api/trips.json';
 import TripBox from '@/components/TripBox';
-
+import { useRouter } from 'next/router';
 
 function index() {
+  const [pickup, setPickup] = useState<string>('Unknown');
+  const [destination, setDestination] = useState<string>('Unknown');
+  const [tripType, setTripType] = useState<number>(0);
 
-  const [pickup, setPickup] = useState<string>('Seiyon')
-  const [destination, setDestination] = useState<string>('AL-Mukalla')
-  const [tripType, setTripType] = useState<number>(1)
+  const router = useRouter();
+  useEffect(() => {
+    if (router.query.pickup && router.query.destination) {
+      setPickup(router.query.pickup as string);
+      setDestination(router.query.destination as string);
+    }
+    if (router.query) {
+      setTripType(Number(router.query.tripType));
+    }
+    console.log('tripType', router.query.tripType);
+  }, [router.query]);
 
-  const filteredTrips = []
-  for(let i = 0; i < Trips.length;i++){
-    if(Trips[i].pickup == pickup && Trips[i].destination==destination){
-      filteredTrips.push(Trips[i])
+  const filteredTrips = [];
+  for (let i = 0; i < Trips.length; i++) {
+    if (Trips[i].pickup == pickup && Trips[i].destination == destination) {
+      filteredTrips.push(Trips[i]);
     }
   }
-
-  console.log("Yoo heres some trips  !!  ", filteredTrips)
-
-
 
   return (
     <>
@@ -39,8 +46,16 @@ function index() {
                 />
               </Link>
               <div className=''>
-                <p className='text-xs font-bold underline'>{tripType==1?"Between Cities":"Within City / Seiyon"}</p>
-                <h1 className='text-xl	font-bold	'>{pickup} - {destination}</h1>
+                <p className='text-xs font-bold underline'>
+                  {tripType == 1
+                    ? `Within City / ${router.query.city}`
+                    : tripType == 2
+                    ? 'Between Cities'
+                    : 'Unknown'}
+                </p>
+                <h1 className='text-xl	font-bold	'>
+                  {pickup} - {destination}
+                </h1>
               </div>
             </div>
             <div className='mr-5 mt-3 justify-self-end'>
@@ -59,7 +74,6 @@ function index() {
               className='rounded-full px-6  gap-1 flex items-center justify-center h-8'
               style={{
                 width: 'auto',
-
                 backgroundColor: 'lightblue',
               }}>
               <Image
@@ -220,9 +234,31 @@ function index() {
         </div>
 
         {/* Trips Component */}
-        {filteredTrips.map((trip: any, index) => {
-          return <TripBox trip={trip} key={index} />;
-        })}
+        {filteredTrips.length != 0 ? (
+          filteredTrips.map((trip: any, index) => {
+            return (
+              <TripBox
+                trip={trip}
+                key={index}
+              />
+            );
+          })
+        ) : (
+          <div className='flex flex-col items-center justify-center mt-9'>
+            <div className='w-4/12 max-w-xl flex justify-center'>
+              <Image
+                src='/images/busNotFound.png'
+                alt='bus not found'
+                width={300}
+                height={300}
+                layout='responsive'
+              />
+            </div>
+            <h1 className='text-2xl font-bold place-items-center mt-2 text-center text-black'>
+              No Trips Found Within Your Selection
+            </h1>
+          </div>
+        )}
       </section>
     </>
   );

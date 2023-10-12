@@ -31,8 +31,12 @@ function Within_Cities() {
     // console.log(selectedMethods)
   }
   const router = useRouter()
-  const handleSubmit = () => {
-    router.push(`/bus_list?city=${selectCity}pickup=${selectFrom}&destination=${selectTo}`)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push({
+      pathname: '/bus_list',
+      query:{tripType: 1,  city:selectCity , pickup:selectFrom, destination: selectTo}
+    })
     // alert("Selected Country:" + " " + selectCity + +"," + " From: " + " " + selectFrom + ", " + "To: " + " " + selectTo + " ," + "Travel Method by:" + " " + selectedMethods);
   };
 
