@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import Within_Cities from './Within_Cities'
 import Between_Cities from './Between_Cities'
 function Butt_Selecte_trip() {
-
   const [togglebtn, settogglebtn] = useState(1)
 
   const Togglebtn = (index: number) => {
