@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useRef, useEffect } from 'react'
 import Testdata from '../testdata.json'
 import Image from 'next/image';
 import { format } from 'date-fns';
@@ -16,14 +16,16 @@ function Between_Cities() {
   const [selectfromCity, setselectfromCity] = useState<string>('');
   const [selecttoCity, setselecttoCity] = useState<string>('');
   const [selectedMethods, setselectedMethods] = useState<string[]>([])
-  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [selectedDate, setSelectedDate] =React.useState<Date>();
+  const [togglecalenderbutton, settogglecalenderbutton] =useState(false)
+
 
   const Toggle_Selected_City = (e: any) => {
     const getCountryName = e.target.value;
     const selectedcity: any = Testdata?.find((x) => x.country_name === getCountryName);
     console.log("selected City: ", selectedcity);
     setCountrystate(selectedcity);
-  
+
   };
 
   const OnTarvelModeSelected = (e: any) => {
@@ -36,6 +38,7 @@ function Between_Cities() {
     console.log(selectedMethods)
   }
 
+<<<<<<< HEAD
 
   const router = useRouter()
   const handleSubmit = (e: React.FormEvent) => {
@@ -46,11 +49,41 @@ function Between_Cities() {
     })
     // alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
   };
+=======
+  const containerRef = useRef(null);
+  // Close calendar on date selection
+  const handleDayClick = (day:any, { selected }) => {
+    setSelectedDate(selected ? undefined : day);
+    settogglecalenderbutton(false);
+  };
+
+  // Add an event listener to close the calendar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        settogglecalenderbutton(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+
+  const rendercalender=()=> {
+    settogglecalenderbutton(!togglecalenderbutton)
+  }
+
+
+  const handleSubmit = () => {
+    alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
+  }
+>>>>>>> hail
   return (
-    <div className='text-[#101010] px-4'>
-      <form
-        onSubmit={handleSubmit}
-      >
+    <div className='text-[#101010] p-4 h-96 md:h-[42vh] my-4 mx-2 rounded-3xl border border-slate-400 md:text-xl'>
+      <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center'>
         <div>
           <h1 className='font-semibold text-md text-[#676767]'>from</h1>
           <select value={selectfromCity} onChange={
@@ -82,16 +115,19 @@ function Between_Cities() {
             })}
           </select>
         </div>
-        {/* <div>
+        <div>
           <h1 className='font-semibold text-md text-[#676767] pt-6'>Departure date</h1>
-          <div>
-          <DayPicker
-      mode="single"
-      selected={selectedDate}
-    />
+          <div ref={containerRef}>
+          <Image onClick={rendercalender} alt='bulkabus' src="icons\calender.svg" height={20} width={20} className='' />
+          {
+            togglecalenderbutton 
+            && <div className='bg-slate-300 text-[#005687] rounded-xl w-fit h-fit absolute'>
+                 <DayPicker mode="single" selected={selectedDate} onSelect={setSelectedDate} onDayClick={handleDayClick}/>
+               </div>
+          }        
+          <h1>{selectedDate ? selectedDate.toDateString() : 'No date selected'}</h1>
           </div>
-        </div> */}
-
+        </div>
         <h1 className='font-semibold text-md text-[#676767] pt-6 -ml-4'>Methods</h1>
         <div className='flex gap-x-2 pt-4'>
 
@@ -113,7 +149,6 @@ function Between_Cities() {
         <button type='submit' className='border-2 mt-12 p-3 w-40 border-black bg-[#005687] text-white  rounded-lg '>Search Trips</button>
       </form>
     </div>
-    
   )
 }
 export default Between_Cities
