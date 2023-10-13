@@ -63,10 +63,8 @@ function Between_Cities() {
     alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
   }
   return (
-    <div className='text-[#101010] px-4'>
-      <form
-        onSubmit={handleSubmit}
-      >
+    <div className='text-[#101010] p-4 h-96 md:h-[42vh] my-4 mx-2 rounded-3xl border border-slate-400 md:text-xl'>
+      <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center'>
         <div>
           <h1 className='font-semibold text-md text-[#676767]'>from</h1>
           <select value={selectfromCity} onChange={
