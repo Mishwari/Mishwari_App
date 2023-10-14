@@ -8,8 +8,6 @@ import {useRouter} from 'next/router'
 
 
 
-
-
 function Between_Cities() {
 
   const [Countrystate, setCountrystate] = useState([]);
@@ -38,7 +36,7 @@ function Between_Cities() {
     console.log(selectedMethods)
   }
 
-<<<<<<< HEAD
+
 
   const router = useRouter()
   const handleSubmit = (e: React.FormEvent) => {
@@ -49,7 +47,7 @@ function Between_Cities() {
     })
     // alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
   };
-=======
+
   const containerRef = useRef(null);
   // Close calendar on date selection
   const handleDayClick = (day:any, { selected }) => {
@@ -77,10 +75,8 @@ function Between_Cities() {
   }
 
 
-  const handleSubmit = () => {
-    alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
-  }
->>>>>>> hail
+  
+
   return (
     <div className='text-[#101010] p-4 h-96 md:h-[42vh] my-4 mx-2 rounded-3xl border border-slate-400 md:text-xl'>
       <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center'>
