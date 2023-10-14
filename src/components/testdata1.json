@@ -1,0 +1,20 @@
+[
+    {"country_id":"1","sortname":"SEI","country_name":"Seiyon","states":[
+     {"state_id":"164","state_name":"Eastern","country_id":"1"},
+{"state_id":"165","state_name":"Manu'a","country_id":"1"},
+{"state_id":"166","state_name":"Swains Island","country_id":"1"},
+{"state_id":"167","state_name":"Western","country_id":"1"}
+    ]},
+    {"country_id":"2","sortname":"ADN","country_name":"Aden","states":[
+     {"state_id":"164","state_name":"Eastern","country_id":"2"},
+{"state_id":"165","state_name":"Manu'a","country_id":"2"},
+{"state_id":"166","state_name":"Swains Island","country_id":"2"},
+{"state_id":"167","state_name":"Western","country_id":"2"}
+    ]},
+    {"country_id":"3","sortname":"MKL","country_name":"AL-Mukalla","states":[
+     {"state_id":"164","state_name":"Eastern","country_id":"3"},
+{"state_id":"165","state_name":"Manu'a","country_id":"3"},
+{"state_id":"166","state_name":"Swains Island","country_id":"3"},
+{"state_id":"167","state_name":"Western","country_id":"3"}
+    ]}
+]

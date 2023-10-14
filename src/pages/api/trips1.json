@@ -1,0 +1,114 @@
+[
+    {
+        "tid":1,
+        "trip_type":1, 
+        "busName":"Ben Sarhad Travels",
+        "pickup":"Seiyon",
+        "destination":"AL-Mukalla",
+        "departure_time":"04:30 PM",
+        "arrival_time":"11:30 PM",
+        "cost":10000,
+        "rate":4.3,
+        "bus_type":"bulka",
+        "path":"coast",
+        "seats":null,
+        "features":{
+            "wifi":true,
+            "ac":true,
+            "charger":false
+        }
+    },
+    {
+        "tid":2,
+        "trip_type":1, 
+        "busName":"Abo Sarhad Travels",
+        "pickup":"Seiyon",
+        "destination":"AL-Mukalla",
+        "departure_time":"03:30 PM",
+        "arrival_time":"10:30 PM",
+        "cost":14000,
+        "rate":2.9,
+        "bus_type":"mass",
+        "path":"inner",
+        "seats":1,
+        "features":{
+            "wifi":false,
+            "ac":true,
+            "charger":true
+        }
+    },
+    {
+        "tid":3,
+        "trip_type":3, 
+        "busName":"Ben Moamer Travels",
+        "pickup":"Seiyon",
+        "destination":"Aden",
+        "departure_time":"05:30 PM",
+        "arrival_time":"01:30 PM",
+        "cost":15000,
+        "rate":4.1,
+        "bus_type":"bulka",
+        "path":"coast",
+        "seats":12,
+        "features":{
+            "wifi":true,
+            "ac":true,
+            "charger":false
+        }
+    },
+    {
+        "tid":4,
+        "trip_type":1, 
+        "busName":" Sarhad Travels",
+        "pickup":"Seiyon",
+        "destination":"AL-Mukalla",
+        "departure_time":"04:30 PM",
+        "arrival_time":"11:30 PM",
+        "cost":10000,
+        "rate":3.3,
+        "bus_type":"bulka",
+        "path":"coast",
+        "seats":4,
+        "features":{
+            "wifi":true,
+            "ac":true,
+            "charger":false
+        }
+    },{
+        "tid":5,
+        "trip_type":2, 
+        "busName":"LazyLine Travels",
+        "pickup":"AL-Mukalla",
+        "destination":"Seiyon",
+        "departure_time":"06:30 PM",
+        "arrival_time":"10:30 AM",
+        "cost":13000,
+        "rate":2.1,
+        "bus_type":"mass",
+        "path":"inner",
+        "seats":6,
+        "features":{
+            "wifi":false,
+            "ac":false,
+            "charger":true
+        }
+    },{
+        "tid":6,
+        "trip_type":2, 
+        "busName":"LazyLine Travels",
+        "pickup":"AL-Mukalla",
+        "destination":"Aden",
+        "departure_time":"06:30 PM",
+        "arrival_time":"10:30 AM",
+        "cost":19000,
+        "rate":4.1,
+        "bus_type":"mass",
+        "path":"inner",
+        "seats":6,
+        "features":{
+            "wifi":true,
+            "ac":false,
+            "charger":false
+        }
+    }
+]

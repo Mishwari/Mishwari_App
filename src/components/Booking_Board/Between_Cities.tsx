@@ -44,6 +44,7 @@ function Between_Cities() {
       pathname: '/bus_list',
       query:{tripType: 2,  city:'', pickup: selectfromCity, destination: selecttoCity}
     })
+    
     // alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
   };
   return (

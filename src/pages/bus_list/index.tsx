@@ -1,16 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Listbox, Transition } from '@headlessui/react'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Mousewheel, FreeMode } from 'swiper/modules';
 import Trips from '../api/trips.json';
 import TripBox from '@/components/TripBox';
 import { useRouter } from 'next/router';
 
+
+const customStyles = {
+  swiper: {
+    overflowY: 'visible',
+    position: 'absolute',
+  },
+  dropdown: {
+    zIndex: 1000,
+  },
+  swiperSlide: {
+    position: 'absolute',
+  },
+};
+
 function index() {
+  
   const [pickup, setPickup] = useState<string>('Unknown');
   const [destination, setDestination] = useState<string>('Unknown');
   const [tripType, setTripType] = useState<number>(0);
+ 
+ 
+  const sortList = [
+    {id:1, name:"Departure Time"},
+    {id:2, name:"Price"},
+    {id:3, name:"Arrival Time"},
+    {id:4, name:"Rating"}
+  ]
+  const [selectedSort, setSelectedSort] = useState<any>(sortList[0])
+  console.log('selectedSort: ', selectedSort)
+  
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
+  
 
   const router = useRouter();
   useEffect(() => {
@@ -31,6 +62,8 @@ function index() {
     }
   }
 
+ 
+
   return (
     <>
       <div className='sticky top-0 z-10 bg-white pb-1'>
@@ -49,9 +82,9 @@ function index() {
                 <p className='text-xs font-bold underline'>
                   {tripType == 1
                     ? `Within City / ${router.query.city}`
-                    : tripType == 2
+                    :( tripType == 2
                     ? 'Between Cities'
-                    : 'Unknown'}
+                    : 'Unknown')}
                 </p>
                 <h1 className='text-xl	font-bold	'>
                   {pickup} - {destination}
@@ -69,11 +102,11 @@ function index() {
           </div>
         </section>
         <section className='m-3 mt-5'>
-          <div className='flex gap-2 '>
+          <div className='flex gap-1 '>
             <div
-              className='rounded-full px-6  gap-1 flex items-center justify-center h-8'
+              className='flex items-center justify-center rounded-full px-6  gap-1 w-[90px] h-[30px]'
               style={{
-                width: 'auto',
+                
                 backgroundColor: 'lightblue',
               }}>
               <Image
@@ -84,7 +117,13 @@ function index() {
               />
               <h2 className='m-0 '>Filters </h2>
             </div>
+            <div>
+              
+            </div>
+            <div className='items-start justify-start overflow-hidden'>
+
             <Swiper
+              style={customStyles.swiper}
               freeMode={true}
               grabCursor={true}
               spaceBetween={8}
@@ -94,11 +133,80 @@ function index() {
               slidesPerView={'auto'}
               modules={[FreeMode, Mousewheel]}
               className=''>
+              
               <SwiperSlide style={{ width: 'auto' }}>
                 <div
-                  className='rounded-full px-3 flex items-center justify-center h-8'
+                  className='rounded-full px-3 flex items-center justify-center  h-[30px]'
                   style={{ backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0 mr-1'>Sort: Early Departure </h2>
+                  <Listbox value={selectedSort} onChange={setSelectedSort}>
+                    {({ open }) => (
+                      <>
+                        <div className=" relative">
+                          <Listbox.Button className=" flex gap-1  focus:outline-none ">
+                            <span className=" ">Sort: {selectedSort.name}</span>
+                            <span className="   items-center ">
+                            <Image
+                              src='/icons/downArrow.svg'
+                              alt='down arrow'
+                              width={25}
+                              height={25}
+                            />
+                            </span>
+                          </Listbox.Button>
+
+                          <Transition
+                            show={open}
+                            as={Fragment}
+                            leave="transition ease-in duration-100"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <Listbox.Options className="absolute  mt-1 w-[100] bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                              {sortList.map((listItem) => (
+                                <Listbox.Option
+                                  key={listItem.id}
+                                  className={({ active }) =>
+                                    classNames(
+                                      active ? 'text-[#005687] bg-[lightblue]' : 'text-gray-900',
+                                      'cursor-default select-none relative py-2 pl-3 pr-9 '
+                                    )
+                                  }
+                                  value={listItem}
+                                >
+                                  {({ selected, active }) => (
+                                    <div className='flex w-max   justify-between  '>
+                                      <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'mr-4 block truncate')}>
+                                        {listItem.name}
+                                      </span>
+
+                                      {selectedSort.id == listItem.id ? (
+                                        <span
+                                          className={classNames(
+                                            active ? 'text-white' : 'text-indigo-600',
+                                            'absolute inset-y-0 right-0 flex items-center pr-4 '
+                                          )}
+                                        >
+                                          <Image src='/icons/checkListIcon.svg' alt="checkListIcon" className="stroke-[blue]" width={20} height={20} />
+                                        </span>
+                                      ) : null}
+                                    </div>
+                                  )}
+                                </Listbox.Option>
+                              ))}
+                            </Listbox.Options>
+                          </Transition>
+                        </div>
+                      </>
+                    )}
+                   </Listbox>
+                  
+                </div>
+              </SwiperSlide>
+              <SwiperSlide style={{ width: 'auto' }}>
+                <div
+                  className='rounded-full px-3 flex items-center justify-center h-[30px]'
+                  style={{ backgroundColor: 'lightblue' }}>
+                  <h2 className='m-0 mr-1'>Bus Type </h2>
                   <Image
                     src='/icons/downArrow.svg'
                     alt='down arrow'
@@ -109,110 +217,20 @@ function index() {
               </SwiperSlide>
               <SwiperSlide style={{ width: 'auto' }}>
                 <div
-                  className='rounded-full px-3 flex items-center justify-center h-8'
+                  className='rounded-full px-3 flex items-center justify-center h-[30px]'
                   style={{ backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
+                  <h2 className='m-0 mr-1'>Departure Time (1)</h2>
+                  <Image
+                    src='/icons/downArrow.svg'
+                    alt='down arrow'
+                    width={25}
+                    height={25}
+                  />
                 </div>
               </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
+             
             </Swiper>
+            </div>
           </div>
         </section>
       </div>
@@ -260,6 +278,7 @@ function index() {
           </div>
         )}
       </section>
+      
     </>
   );
 }

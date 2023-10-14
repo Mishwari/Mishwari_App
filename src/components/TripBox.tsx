@@ -39,8 +39,8 @@ function TripBox({ trip }: TripProps) {
           </h5>
         </div>
         <div
-          className={`flex justify-center items-center rounded-xl px-1 py-0.5 ${
-            trip.rate > 3.5 ? 'bg-[#21C17A]' : ' bg-[#FFA400]'
+          className={`flex justify-center items-center rounded-xl px-1 py-0.5 h-[25px] w-[60px] ${
+            trip.rate >= 3.5 ? 'bg-[#21C17A]' : ' bg-[#FFA400]'
           }`}>
           <Image
             src='/icons/star.svg'
