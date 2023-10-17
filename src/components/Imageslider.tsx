@@ -7,16 +7,16 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 function imageslider() {
     return (
-        <div className=' relative z-0'>
+        <div className=' relative z-0 h-[25vh] overflow-hidden flex justify-center items-center'>
             <Swiper
                 pagination={{
                     dynamicBullets: true,
                 }}
                 modules={[Pagination]}
-                className="mySwiper"
+                className="mySwiper h-[25vh] flex justify-center items-center"
             >
-                <SwiperSlide> <Image alt='' src='/img1.jpg' height={100} width={700}  style={{objectFit:'fill',height:'25vh',width:'100%',padding:'0 0',opacity:'0.5'}} /> </SwiperSlide>
-                <SwiperSlide> <Image alt='' src='/img2.jpg' height={100} width={700}  style={{objectFit:'fill',height:'25vh',width:'100%',padding:'0 0',opacity:'0.5'}} /> </SwiperSlide>
+                <SwiperSlide className='flex justify-center items-center'> <img alt='' src='/img1.jpg'  style={{objectFit:'cover',width:'100%', height:'100%',padding:'0 0', objectPosition : '50% 70%'}}  /> </SwiperSlide>
+                <SwiperSlide className='flex justify-center items-center'> <img alt='' src='/img2.jpg'  style={{objectFit:'cover',width:'100%', height:'100%',padding:'0 0', objectPosition : '50% 70%'}}  /> </SwiperSlide>
             </Swiper>
         </div>
     )
