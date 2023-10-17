@@ -1,47 +1,46 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, useRef, Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Listbox, Transition } from '@headlessui/react'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Mousewheel, FreeMode } from 'swiper/modules';
 import Trips from '../api/trips.json';
 import TripBox from '@/components/TripBox';
+import SortDropdown from '@/components/filters_bar/SortDropdown';
 import { useRouter } from 'next/router';
+import FilterGroup from '@/components/filter/FilterGroup';
 
-
-const customStyles = {
-  swiper: {
-    overflowY: 'visible',
-    position: 'absolute',
-  },
-  dropdown: {
-    zIndex: 1000,
-  },
-  swiperSlide: {
-    position: 'absolute',
-  },
+export type SortItem = {
+  id: number;
+  name: string;
 };
 
 function index() {
-  
+  let [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+
   const [pickup, setPickup] = useState<string>('Unknown');
   const [destination, setDestination] = useState<string>('Unknown');
   const [tripType, setTripType] = useState<number>(0);
- 
- 
+
+  const [filteredTrips, setFilteredTrips] = useState<any[]>([]);
+  const [finalFilteredTrips, setFinalFilteredTrips] = useState<object[]>([]);
+
+  const [filterBuses, setFilterBuses] = useState<{
+    [key: string]: string[] | number[];
+  }>({
+    BusType: [],
+    Departure: [],
+    Rating: [],
+  });
+
   const sortList = [
-    {id:1, name:"Departure Time"},
-    {id:2, name:"Price"},
-    {id:3, name:"Arrival Time"},
-    {id:4, name:"Rating"}
-  ]
-  const [selectedSort, setSelectedSort] = useState<any>(sortList[0])
-  console.log('selectedSort: ', selectedSort)
-  
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-  }
-  
+    { id: 1, name: 'Departure Time' },
+    { id: 2, name: 'Cheapest' },
+    { id: 3, name: 'Arrival Time' },
+    { id: 4, name: 'Top Rated' },
+  ];
+  const [selectedSort, setSelectedSort] = useState<SortItem>(sortList[0]);
+
+  // Filters
 
   const router = useRouter();
   useEffect(() => {
@@ -52,22 +51,50 @@ function index() {
     if (router.query) {
       setTripType(Number(router.query.tripType));
     }
-    console.log('tripType', router.query.tripType);
   }, [router.query]);
 
-  const filteredTrips = [];
-  for (let i = 0; i < Trips.length; i++) {
-    if (Trips[i].pickup == pickup && Trips[i].destination == destination) {
-      filteredTrips.push(Trips[i]);
+  useEffect(() => {
+    let newFilteredTrips = [];
+    for (let i = 0; i < Trips.length; i++) {
+      if (Trips[i].pickup == pickup && Trips[i].destination == destination) {
+        newFilteredTrips.push(Trips[i]);
+      }
     }
-  }
+    setFilteredTrips(newFilteredTrips);
+  }, [pickup, destination]);
 
- 
+  useEffect(() => {
+    let newFinal = [];
+    for (let i = 0; i < filteredTrips.length; i++) {
+      if (
+        ((filterBuses.BusType.length === 0) |
+          filterBuses.BusType.includes(filteredTrips[i].bus_type)) &
+        ((filterBuses.Rating.length === 0) |
+          (filteredTrips[i].rate > Math.min(...filterBuses.Rating)))
+      ) {
+        newFinal.push(filteredTrips[i]);
+      }
+    }
+    setFinalFilteredTrips(newFinal);
+  }, [filteredTrips, filterBuses]);
+
+  useEffect(() => {
+    if (selectedSort.id == 1) {
+    } else if (selectedSort.id == 2) {
+      const sortedTrips = [...filteredTrips].sort((a, b) => a.cost - b.cost);
+      setFilteredTrips(sortedTrips);
+    }
+    //rate
+    else if (selectedSort.id == 4) {
+      const sortedTrips = [...filteredTrips].sort((a, b) => b.rate - a.rate);
+      setFilteredTrips(sortedTrips);
+    }
+  }, [selectedSort]);
 
   return (
     <>
-      <div className='sticky top-0 z-10 bg-white pb-1'>
-        <section className='my-2 '>
+      <div className=' sticky top-0 z-10 bg-white pb-1 max-w-5xl '>
+        <section className=' my-2 '>
           <div className='flex justify-between w-full'>
             <div className='flex gap-4 pt-1'>
               <Link href='/'>
@@ -82,9 +109,9 @@ function index() {
                 <p className='text-xs font-bold underline'>
                   {tripType == 1
                     ? `Within City / ${router.query.city}`
-                    :( tripType == 2
+                    : tripType == 2
                     ? 'Between Cities'
-                    : 'Unknown')}
+                    : 'Unknown'}
                 </p>
                 <h1 className='text-xl	font-bold	'>
                   {pickup} - {destination}
@@ -106,9 +133,9 @@ function index() {
             <div
               className='flex items-center justify-center rounded-full px-6  gap-1 w-[90px] h-[30px]'
               style={{
-                
                 backgroundColor: 'lightblue',
-              }}>
+              }}
+              onClick={() => setIsFilterOpen(true)}>
               <Image
                 src='/icons/filter.svg'
                 alt='down arrow'
@@ -117,119 +144,68 @@ function index() {
               />
               <h2 className='m-0 '>Filters </h2>
             </div>
-            <div>
-              
-            </div>
-            <div className='items-start justify-start overflow-hidden'>
 
-            <Swiper
-              style={customStyles.swiper}
-              freeMode={true}
-              grabCursor={true}
-              spaceBetween={8}
-              mousewheel={{
-                invert: false,
-              }}
-              slidesPerView={'auto'}
-              modules={[FreeMode, Mousewheel]}
-              className=''>
-              
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center  h-[30px]'
-                  style={{ backgroundColor: 'lightblue' }}>
-                  <Listbox value={selectedSort} onChange={setSelectedSort}>
-                    {({ open }) => (
-                      <>
-                        <div className=" relative">
-                          <Listbox.Button className=" flex gap-1  focus:outline-none ">
-                            <span className=" ">Sort: {selectedSort.name}</span>
-                            <span className="   items-center ">
-                            <Image
-                              src='/icons/downArrow.svg'
-                              alt='down arrow'
-                              width={25}
-                              height={25}
-                            />
-                            </span>
-                          </Listbox.Button>
+            {/* Filter Panel hidden by default its state: isOpen */}
+            <FilterGroup
+              setFilterBuses={setFilterBuses}
+              filterBuses={filterBuses}
+              isFilterOpen={isFilterOpen}
+              setIsFilterOpen={setIsFilterOpen}
+            />
 
-                          <Transition
-                            show={open}
-                            as={Fragment}
-                            leave="transition ease-in duration-100"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
-                          >
-                            <Listbox.Options className="absolute  mt-1 w-[100] bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                              {sortList.map((listItem) => (
-                                <Listbox.Option
-                                  key={listItem.id}
-                                  className={({ active }) =>
-                                    classNames(
-                                      active ? 'text-[#005687] bg-[lightblue]' : 'text-gray-900',
-                                      'cursor-default select-none relative py-2 pl-3 pr-9 '
-                                    )
-                                  }
-                                  value={listItem}
-                                >
-                                  {({ selected, active }) => (
-                                    <div className='flex w-max   justify-between  '>
-                                      <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'mr-4 block truncate')}>
-                                        {listItem.name}
-                                      </span>
-
-                                      {selectedSort.id == listItem.id ? (
-                                        <span
-                                          className={classNames(
-                                            active ? 'text-white' : 'text-indigo-600',
-                                            'absolute inset-y-0 right-0 flex items-center pr-4 '
-                                          )}
-                                        >
-                                          <Image src='/icons/checkListIcon.svg' alt="checkListIcon" className="stroke-[blue]" width={20} height={20} />
-                                        </span>
-                                      ) : null}
-                                    </div>
-                                  )}
-                                </Listbox.Option>
-                              ))}
-                            </Listbox.Options>
-                          </Transition>
-                        </div>
-                      </>
-                    )}
-                   </Listbox>
-                  
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center h-[30px]'
-                  style={{ backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0 mr-1'>Bus Type </h2>
-                  <Image
-                    src='/icons/downArrow.svg'
-                    alt='down arrow'
-                    width={25}
-                    height={25}
-                  />
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center h-[30px]'
-                  style={{ backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0 mr-1'>Departure Time (1)</h2>
-                  <Image
-                    src='/icons/downArrow.svg'
-                    alt='down arrow'
-                    width={25}
-                    height={25}
-                  />
-                </div>
-              </SwiperSlide>
-             
-            </Swiper>
+            <div className='items-start justify-start overflow-x-hidden '>
+              <Swiper
+                style={{
+                  overflowY: 'visible',
+                  position: 'absolute',
+                }}
+                freeMode={true}
+                grabCursor={true}
+                spaceBetween={8}
+                mousewheel={{
+                  invert: false,
+                }}
+                slidesPerView={'auto'}
+                modules={[FreeMode, Mousewheel]}>
+                <SwiperSlide style={{ width: 'auto' }}>
+                  <div
+                    className='rounded-full  px-3 flex items-center justify-center  h-[30px]'
+                    style={{ backgroundColor: 'lightblue' }}>
+                    {/* Component */}
+                    <SortDropdown
+                      selectedSort={selectedSort}
+                      setSelectedSort={setSelectedSort}
+                      sortList={sortList}
+                    />
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide style={{ width: 'auto' }}>
+                  <div
+                    className='rounded-full px-3 flex items-center justify-center h-[30px]'
+                    style={{ backgroundColor: 'lightblue' }}>
+                    <h2 className='m-0 mr-1'>Bus Type </h2>
+                    <Image
+                      src='/icons/downArrow.svg'
+                      alt='down arrow'
+                      width={25}
+                      height={25}
+                    />
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide style={{ width: 'auto' }}>
+                  <div
+                    className='rounded-full px-3 flex items-center justify-center h-[30px]'
+                    style={{ backgroundColor: 'lightblue' }}>
+                    <h2 className='m-0 mr-1'>Departure Time (1)</h2>
+                    <Image
+                      src='/icons/downArrow.svg'
+                      alt='down arrow'
+                      width={25}
+                      height={25}
+                    />
+                  </div>
+                </SwiperSlide>
+              </Swiper>
             </div>
           </div>
         </section>
@@ -252,8 +228,8 @@ function index() {
         </div>
 
         {/* Trips Component */}
-        {filteredTrips.length != 0 ? (
-          filteredTrips.map((trip: any, index) => {
+        {finalFilteredTrips.length != 0 ? (
+          finalFilteredTrips.map((trip: any, index) => {
             return (
               <TripBox
                 trip={trip}
@@ -278,7 +254,6 @@ function index() {
           </div>
         )}
       </section>
-      
     </>
   );
 }
