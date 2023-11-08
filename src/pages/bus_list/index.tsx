@@ -1,16 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Mousewheel, FreeMode } from 'swiper/modules';
 import Trips from '../api/trips.json';
 import TripBox from '@/components/TripBox';
+import SortDropdown from '@/components/filters_bar/SortDropdown';
 import { useRouter } from 'next/router';
+import FilterGroup from '@/components/filter/FilterGroup';
+
+export type SortItem = {
+  id: number;
+  name: string;
+};
 
 function index() {
+  let [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+
   const [pickup, setPickup] = useState<string>('Unknown');
   const [destination, setDestination] = useState<string>('Unknown');
   const [tripType, setTripType] = useState<number>(0);
+
+  const [filteredTrips, setFilteredTrips] = useState<any[]>([]);//9 ref
+
+  const [finalFilteredTrips, setFinalFilteredTrips] = useState<object[]>([]);
+
+  const [filterBuses, setFilterBuses] = useState<{
+    [key: string]: string[] | number[];
+  }>({
+    BusType: [],
+    Departure: [],
+    Rating: [],
+  });
+
+  const sortList = [
+    { id: 1, name: 'Departure Time' },
+    { id: 2, name: 'Cheapest' },
+    { id: 3, name: 'Arrival Time' },
+    { id: 4, name: 'Top Rated' },
+  ];
+  const [selectedSort, setSelectedSort] = useState<SortItem>(sortList[0]);
+
+  // Filters
 
   const router = useRouter();
   useEffect(() => {
@@ -18,25 +49,56 @@ function index() {
       setPickup(router.query.pickup as string);
       setDestination(router.query.destination as string);
     }
-    if (router.query) {
+    if (router.query.tripType) {
       setTripType(Number(router.query.tripType));
     }
-    console.log('tripType', router.query.tripType);
   }, [router.query]);
 
-  const filteredTrips = [];
-  for (let i = 0; i < Trips.length; i++) {
-    if (Trips[i].pickup == pickup && Trips[i].destination == destination) {
-      filteredTrips.push(Trips[i]);
+  useEffect(() => {
+    let newFilteredTrips = [];
+    for (let i = 0; i < Trips.length; i++) {
+      if (Trips[i].pickup == pickup && Trips[i].destination == destination) {
+        newFilteredTrips.push(Trips[i]);
+      }
     }
-  }
+    setFilteredTrips(newFilteredTrips);
+  }, [pickup, destination]);
+
+  console.log("filteredBuses: ", filterBuses)
+
+  useEffect(() => {
+    let newFinal = [];
+    for (let i = 0; i < filteredTrips.length; i++) {
+      if (
+        ((filterBuses.BusType.length === 0) || filterBuses.BusType.includes(filteredTrips[i].bus_type)) &&
+        ((filterBuses.Rating.length === 0) || (filteredTrips[i].rate > Math.min(...filterBuses.Rating)))
+      ) {
+        newFinal.push(filteredTrips[i]);
+      }
+    }
+    setFinalFilteredTrips(newFinal);
+  }, [filteredTrips, filterBuses]);
+
+  useEffect(() => {
+    if (selectedSort.id == 1) {
+
+    } else if (selectedSort.id == 2) {
+      const sortedTrips = [...filteredTrips].sort((a, b) => a.cost - b.cost);
+      setFilteredTrips(sortedTrips);
+    }
+    //rate
+    else if (selectedSort.id == 4) {
+      const sortedTrips = [...filteredTrips].sort((a, b) => b.rate - a.rate);
+      setFilteredTrips(sortedTrips);
+    }
+  }, [selectedSort]);
 
   return (
-    <>
-      <div className='sticky top-0 z-10 bg-white pb-1'>
-        <section className='my-2 '>
-          <div className='flex justify-between w-full'>
-            <div className='flex gap-4 pt-1'>
+    <div  className='flex flex-col items-center '>
+      <div className=' sticky top-0 w-full z-10 max-w-5xl bg-white'>
+        <section className='my-2'>
+          <div className='flex justify-between items-center w-full'>
+            <div className='flex items-center gap-4 pt-1'>
               <Link href='/'>
                 <Image
                   src='/icons/leftArrow.svg'
@@ -69,13 +131,13 @@ function index() {
           </div>
         </section>
         <section className='m-3 mt-5'>
-          <div className='flex gap-2 '>
+          <div className='flex gap-1 '>
             <div
-              className='rounded-full px-6  gap-1 flex items-center justify-center h-8'
+              className='flex items-center justify-center rounded-full px-6  gap-1 w-[90px] h-[30px]'
               style={{
-                width: 'auto',
                 backgroundColor: 'lightblue',
-              }}>
+              }}
+              onClick={() => setIsFilterOpen(true)}>
               <Image
                 src='/icons/filter.svg'
                 alt='down arrow'
@@ -84,158 +146,92 @@ function index() {
               />
               <h2 className='m-0 '>Filters </h2>
             </div>
-            <Swiper
-              freeMode={true}
-              grabCursor={true}
-              spaceBetween={8}
-              mousewheel={{
-                invert: false,
-              }}
-              slidesPerView={'auto'}
-              modules={[FreeMode, Mousewheel]}
-              className=''>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center h-8'
-                  style={{ backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0 mr-1'>Sort: Early Departure </h2>
-                  <Image
-                    src='/icons/downArrow.svg'
-                    alt='down arrow'
-                    width={25}
-                    height={25}
-                  />
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center h-8'
-                  style={{ backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide style={{ width: 'auto' }}>
-                <div
-                  className='rounded-full px-3 flex items-center justify-center'
-                  style={{ height: '30px', backgroundColor: 'lightblue' }}>
-                  <h2 className='m-0'>Sort: Early Departure</h2>
-                </div>
-              </SwiperSlide>
-            </Swiper>
+
+            {/* Filter Panel hidden by default its state: isOpen */}
+            <FilterGroup
+              filterBuses={filterBuses}
+              setFilterBuses={setFilterBuses}
+              isFilterOpen={isFilterOpen}
+              setIsFilterOpen={setIsFilterOpen}
+            />
+
+            <div className='items-start justify-start overflow-x-hidden '>
+              <Swiper
+                style={{
+                  overflowY: 'visible',
+                  position: 'absolute',
+                }}
+                freeMode={true}
+                grabCursor={true}
+                spaceBetween={8}
+                mousewheel={{
+                  invert: false,
+                }}
+                slidesPerView={'auto'}
+                modules={[FreeMode, Mousewheel]}>
+                <SwiperSlide style={{ width: 'auto' }}>
+                  <div
+                    className='rounded-full  px-3 flex items-center justify-center  h-[30px]'
+                    style={{ backgroundColor: 'lightblue' }}>
+                    {/* Component */}
+                    <SortDropdown
+                      selectedSort={selectedSort}
+                      setSelectedSort={setSelectedSort}
+                      sortList={sortList}
+                    />
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide style={{ width: 'auto' }}>
+                  <div
+                    className='rounded-full px-3 flex items-center justify-center h-[30px]'
+                    style={{ backgroundColor: 'lightblue' }}>
+                    <h2 className='m-0 mr-1'>Bus Type </h2>
+                    <Image
+                      src='/icons/downArrow.svg'
+                      alt='down arrow'
+                      width={25}
+                      height={25}
+                    />
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide style={{ width: 'auto' }}>
+                  <div
+                    className='rounded-full px-3 flex items-center justify-center h-[30px]'
+                    style={{ backgroundColor: 'lightblue' }}>
+                    <h2 className='m-0 mr-1'>Departure Time (1)</h2>
+                    <Image
+                      src='/icons/downArrow.svg'
+                      alt='down arrow'
+                      width={25}
+                      height={25}
+                    />
+                  </div>
+                </SwiperSlide>
+              </Swiper>
+            </div>
           </div>
         </section>
       </div>
 
-      <section className='m-3   max-w-5xl '>
+      <section className='m-3 max-w-5xl md:max-w-7xl'>
         <div
-          className='flex rounded-xl 	 px-2  gap-4'
-          style={{ backgroundColor: 'lightblue' }}>
+          className='flex items-center rounded-xl border border-slate-200	p-2 mb-3 gap-2' 
+          style={{ backgroundColor: '' }}>
           <Image
             src='/icons/busFrontView.svg'
             alt='bus front View'
-            width={30}
-            height={30}
+            width={20}
+            height={20}
           />
-          <h2 className='m-0 text-sm'>
-            <strong>{filteredTrips.length}</strong> Buses found, Starting from{' '}
-            <strong>5000YR</strong> per passenger
+          <h2 className='m-0 text-xs font-[Inter] text-gray-500 font-light '>
+            <strong className='font-semibold text-black'>{filteredTrips.length}</strong> Buses found, Starting from{' '}
+            <strong className='font-semibold text-black'>5000YR</strong> per passenger
           </h2>
         </div>
 
         {/* Trips Component */}
-        {filteredTrips.length != 0 ? (
-          filteredTrips.map((trip: any, index) => {
+        {finalFilteredTrips.length != 0 ? (
+          finalFilteredTrips.map((trip: any, index) => {
             return (
               <TripBox
                 trip={trip}
@@ -260,7 +256,7 @@ function index() {
           </div>
         )}
       </section>
-    </>
+    </div>
   );
 }
 

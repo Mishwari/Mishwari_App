@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Testdata from '../testdata.json'
 import Image from 'next/image';
-import { format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { useRouter } from 'next/router'
@@ -12,15 +12,15 @@ function Between_Cities() {
   const [selectfromCity, setselectfromCity] = useState<string>('');
   const [selecttoCity, setselecttoCity] = useState<string>('');
   const [selectedMethods, setselectedMethods] = useState<string[]>([])
-  const [selectedDate, setSelectedDate] = React.useState<Date>();
+  const [selectedDate, setSelectedDate] = useState<Date>();
   const [togglecalenderbutton, settogglecalenderbutton] = useState(false)
-  const CurrentTime = new Date();
-  const options: any = { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' };
+  
+  // const dateString = selectedDate ? selectedDate.toDateString() : 'No date selected';
 
   const Toggle_Selected_City = (e: any) => {
     const getCountryName = e.target.value;
     const selectedcity: any = Testdata?.find((x) => x.country_name === getCountryName);
-    console.log("selected City: ", selectedcity);
+    // console.log("selected City: ", selectedcity);
     setCountrystate(selectedcity);
   };
 
@@ -31,7 +31,7 @@ function Between_Cities() {
     } else {
       setselectedMethods((prevValue) => prevValue.filter((item) => item !== selectedvalue))
     }
-    console.log(selectedMethods)
+    // console.log(selectedMethods)
   }
 
   const router = useRouter()
@@ -41,7 +41,6 @@ function Between_Cities() {
       pathname: '/bus_list',
       query: { tripType: 2, city: '', pickup: selectfromCity, destination: selecttoCity }
     })
-    // alert("Selected CountryFrom: " + " " + selectfromCity + ", " + "To: " + " " + selecttoCity + " ," + "Travel Method by:" + " " + selectedMethods);
   };
 
   const containerRef = useRef(null);
@@ -69,16 +68,32 @@ function Between_Cities() {
     settogglecalenderbutton(!togglecalenderbutton)
   }
 
+
+  const handleTodayDateButton= (e)=>{
+    e.preventDefault();
+    const todaysDate=new Date()
+    setSelectedDate(todaysDate)
+    console.log("date is" +todaysDate)
+  }
+  
+  const handleTomwrowDateButton= (e)=>{
+    e.preventDefault();
+    const tomwrowsDate=(addDays(new Date(), 1))
+
+    setSelectedDate(tomwrowsDate)
+    console.log("date is" +tomwrowsDate)
+  }
+
   return (
-    <div className='text-[#101010] h-96 md:h-[42vh] my-4 mx-2 rounded-3xl border border-slate-400 md:text-xl'>
+    <div className='text-[#101010] my-4 md:text-xl'>
       <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center'>
-        <div className='md:max-w-7xl'>
-          <div className=' py-3 pl-8 md:pl-0'>
+        <div className='md:max-w-7xl px-10 md:px-10 py-2 h-fit rounded-3xl border border-slate-400 w-auto'>
+          <div className='' >
             <h1 className='font-semibold text-md text-[#676767] pb-2'>from</h1>
             <div className='flex relative'>
               <div className='w-4 h-28 absolute -left-6 top-3 '>
                 <img alt='fromtosvg' src='\icons\fromToIcon.svg' className='h-28 w-4 object-contain' />
-              </div> 
+              </div>
               <select value={selectfromCity} onChange={
                 (e: React.ChangeEvent<HTMLSelectElement>) => {
                   Toggle_Selected_City(e);
@@ -106,7 +121,7 @@ function Between_Cities() {
               </select>
             </div>
           </div>
-        
+
           <div >
             <div>
               <h1 className='font-semibold text-md text-[#676767] pt-4 pb-2'>Departure date</h1>
@@ -119,11 +134,11 @@ function Between_Cities() {
                       <DayPicker className='w-72 h-72' mode="single" selected={selectedDate} onSelect={setSelectedDate} onDayClick={handleDayClick} />
                     </div>
                   }
-                  <h1 className='pl-2 font-light text-base'>{selectedDate ? selectedDate.toDateString() : `${CurrentTime.toLocaleDateString('en-US', options)}`}</h1>
+                  <p className='pl-1 md:pl-2 font-medium text-sm md:text-large text-[#676767]'>{selectedDate ? format(selectedDate, 'dd/MM/yyyy'):'Select date' }</p>
                 </div>
-                <div className=' '>
-                  <button className='h-8 w-16 border border-slate-300 rounded-lg  text-lg text-[#676767] bg-slate-100'>Today</button>
-                  <button className='h-8 w-24  border border-slate-300 rounded-lg  text-lg text-[#676767]'>Tomorrow</button>
+                <div>
+                  <button onClick={handleTodayDateButton} className='h-fit w-fit px-2 py-1 mx-1.5 border border-[#005587d7] rounded-lg text-[#676767] text-sm md:text-large bg-slate-100'>Today</button>
+                  <button onClick={handleTomwrowDateButton} className='h-fit w-fit px-2 py-1 border border-[#005587d7] rounded-lg text-[#676767] text-sm md:text-large'>Tomorrow</button>
                 </div>
               </div>
             </div>
@@ -142,13 +157,17 @@ function Between_Cities() {
 
               <label className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${selectedMethods.includes('Bike') ? 'bg-[#005687] border-2 border-black' : 'bg-[#e2e1e1]'}`}>
                 <input onChange={OnTarvelModeSelected} type="checkbox" value="Bike" className=' hidden checked:bg-black' />
-                <Image alt='bulkabus' src="./bike.svg" height={20} width={20} className='h-14 w-16 mt-7 ' />
+                <Image alt='bulkabus' src="./bike.svg" height={20} width={20} className='h-14 w-16' />
               </label>
             </div>
           </div>
         </div>
-        <button type='submit' className='w-40 md:w-72 mt-6 py-2 border-2 border-slate-700 text-white bg-[#005687] rounded-lg'>Search Trips</button>
+        <button type='submit' className='w-40 md:w-72 mt-4 py-2 border-2 border-slate-700 text-white bg-[#005687] rounded-lg'>Search Trips</button>
       </form>
+
+      <div className='bg-[#31324A] w-full  flex justify-center text-white p-4 mt-4'>
+        <p>Made with ❤️ in Yemen</p>
+      </div>
     </div>
   )
 }

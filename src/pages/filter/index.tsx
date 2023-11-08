@@ -1,5 +1,5 @@
 import React from 'react'
-import Filteredcomponents from '/src/components/filter/comp_collection'
+import Comp_collection from 'src/components/filter/FilterGroup'
 function index() {
   return (
     <div className='p-2'>
@@ -7,7 +7,7 @@ function index() {
           <img src="\icons\leftArrow.svg" alt="leftArrow" className='h-10 w-10'  />
           <h1 className=' font-bold'>Filter By</h1>
         </div>
-        <Filteredcomponents/>
+        <Comp_collection/>
     </div>
   )
 }
