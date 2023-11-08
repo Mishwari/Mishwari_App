@@ -67,9 +67,9 @@ function index() {
     let newFinal = [];
     for (let i = 0; i < filteredTrips.length; i++) {
       if (
-        ((filterBuses.BusType.length === 0) |
-          filterBuses.BusType.includes(filteredTrips[i].bus_type)) &
-        ((filterBuses.Rating.length === 0) |
+        ((filterBuses.BusType.length === 0) ||
+          filterBuses.BusType.includes(filteredTrips[i].bus_type)) &&
+        ((filterBuses.Rating.length === 0) ||
           (filteredTrips[i].rate > Math.min(...filterBuses.Rating)))
       ) {
         newFinal.push(filteredTrips[i]);
