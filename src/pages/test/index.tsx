@@ -1,71 +1,76 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState, useRef} from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+// DoubleSlider.js
+import React, { useState } from 'react';
 
-export default function Example() {
-  const [open, setOpen] = useState(true)
+const DoubleSlider = () => {
+  const [minPrice, setMinPrice] = useState(1000);
+  const [maxPrice, setMaxPrice] = useState(7000);
+  const min = 100;
+  const max = 10000;
+
+  const minThumb = ((minPrice - min) / (max - min)) * 100;
+  const maxThumb = 100 - ((maxPrice - min) / (max - min)) * 100;
+
+  const handleMinChange = (value) => {
+    setMinPrice(Math.min(value, maxPrice - 500));
+  };
+
+  const handleMaxChange = (value) => {
+    setMaxPrice(Math.max(value, minPrice + 500));
+  };
 
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="fixed inset-0 overflow-hidden" onClose={setOpen}>
-        <div className="absolute inset-0 overflow-hidden">
-          <Dialog.Overlay className="absolute inset-0" />
-
-          <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex">
-            <Transition.Child
-              as={Fragment}
-              enter="transform transition ease-in-out duration-500 sm:duration-700"
-              enterFrom="translate-x-full"
-              enterTo="translate-x-0"
-              leave="transform transition ease-in-out duration-500 sm:duration-700"
-              leaveFrom="translate-x-0"
-              leaveTo="translate-x-full"
-            >
-              <div className="w-screen max-w-md">
-                <div className="h-full divide-y divide-gray-200 flex flex-col bg-white shadow-xl">
-                  <div className="min-h-0 flex-1 flex flex-col py-6 overflow-y-scroll">
-                    <div className="px-4 sm:px-6">
-                      <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-lg font-medium text-gray-900">Panel title</Dialog.Title>
-                        <div className="ml-3 h-7 flex items-center">
-                          <button
-                            type="button"
-                            className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            onClick={() => setOpen(false)}
-                          >
-                            <span className="sr-only">Close panel</span>
-                            <span className="h-6 w-9" aria-hidden="true" >X</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-6 relative flex-1 px-4 sm:px-6">
-                      {/* Replace with your content */}
-                      <div className="h-full border-2 border-dashed border-gray-200" aria-hidden="true" />
-                      {/* /End replace */}
-                    </div>
-                  </div>
-                  <div className="flex-shrink-0 px-4 py-4 flex justify-end">
-                    <button
-                      type="button"
-                      className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      onClick={() => setOpen(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </Transition.Child>
+    <div className="h-screen flex justify-center items-center">
+      <div className="relative max-w-xl w-full">
+        <div>
+          <input
+            type="range"
+            step="100"
+            min={min}
+            max={max}
+            value={minPrice}
+            onChange={(e) => handleMinChange(Number(e.target.value))}
+            className="absolute pointer-events-none appearance-none z-20 h-2 w-full opacity-0 cursor-pointer"
+          />
+          <input
+            type="range"
+            step="100"
+            min={min}
+            max={max}
+            value={maxPrice}
+            onChange={(e) => handleMaxChange(Number(e.target.value))}
+            className="absolute pointer-events-none appearance-none z-20 h-2 w-full opacity-0 cursor-pointer"
+          />
+          <div className="relative z-10 h-2">
+            <div className="absolute z-10 left-0 right-0 bottom-0 top-0 rounded-md bg-gray-200"></div>
+            <div className="absolute z-20 top-0 bottom-0 rounded-md bg-green-300" style={{ right: `${maxThumb}%`, left: `${minThumb}%` }}></div>
+            <div className="absolute z-30 w-6 h-6 top-0 left-0 bg-green-600 rounded-full -mt-2 -ml-1" style={{ left: `${minThumb}%` }}></div>
+            <div className="absolute z-30 w-6 h-6 top-0 right-0 bg-green-900 rounded-full -mt-2 -mr-3" style={{ right: `${maxThumb}%` }}></div>
           </div>
         </div>
-      </Dialog>
-    </Transition.Root>
-  )
-}
+
+        <div className="flex justify-between items-center py-5">
+          <div>
+            <input
+              type="text"
+              maxLength="5"
+              value={minPrice}
+              onChange={(e) => handleMinChange(Number(e.target.value))}
+              className="px-3 py-2 border border-gray-200 rounded w-24 text-center"
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              maxLength="5"
+              value={maxPrice}
+              onChange={(e) => handleMaxChange(Number(e.target.value))}
+              className="px-3 py-2 border border-gray-200 rounded w-24 text-center"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DoubleSlider;

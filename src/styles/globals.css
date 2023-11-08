@@ -2,3 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+
+
+
+/* App.css */
+input[type=range]::-webkit-slider-thumb {
+    pointer-events: all;
+    width: 24px;
+    height: 24px;
+    appearance: none;
+  }
+  

@@ -26,7 +26,7 @@ interface TripProps {
 function TripBox({ trip }: TripProps) {
   return (
     <div
-      className='mt-5 justify-center sm:flex sm:gap-64 '
+      className='mt-2 justify-center sm:flex sm:gap-64 '
       style={{
         border: ' 0.5px solid #A4A4A4',
         borderRadius: '12px',

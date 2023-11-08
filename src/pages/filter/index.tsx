@@ -1,5 +1,5 @@
 import React from 'react'
-import Comp_collection from '@/components/filter/Comp_collection'
+import Comp_collection from 'src/components/filter/FilterGroup'
 function index() {
   return (
     <div className='p-2'>

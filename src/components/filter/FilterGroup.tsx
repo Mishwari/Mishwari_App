@@ -9,13 +9,14 @@ function FilterGroup({
   setIsFilterOpen,
 }) {
   const [localFilters, setLocalFilters] = useState(filterBuses);
+  // console.log("localFilters: ", localFilters)
 
   useEffect(() => {
     setLocalFilters(filterBuses);
-  }, [isFilterOpen, filterBuses]);
+  }, [filterBuses, isFilterOpen]);
 
   const OnTarvelModeSelected = (e: any, busGroup: string) => {
-    let selectedvalue = e.target.value;
+    let selectedvalue = e.target.value; //mass
 
     if (busGroup === 'Rating') {
       selectedvalue = parseInt(selectedvalue, 10);
@@ -108,116 +109,56 @@ function FilterGroup({
                         </button>
                       )}
                     </div>
-                    <div className='mt-6 h-full  relative flex-1 px-4 sm:px-6'>
+                    <div className='mt-4 h-full  relative flex-1 px-4 sm:px-6'>
                       <>
+                      {/* Bus type filter */}
                         <div>
                           <h1 className='font-bold'>Bus Type </h1>
-                          <div className='flex items-center gap-x-4'>
-                            <label
-                              className={`border border-slate-400 p-2 rounded-lg ${
-                                localFilters['BusType'].includes('mass')
-                                  ? 'bg-[#005687]'
-                                  : 'bg-[#e2e1e1]'
-                              }`}>
-                              <input
-                                onChange={(e) =>
-                                  OnTarvelModeSelected(e, 'BusType')
-                                }
-                                type='checkbox'
-                                value='mass'
-                                checked={localFilters['BusType'].includes(
-                                  'mass'
-                                )}
-                                className='hidden'
+                          <div className='flex items-center gap-x-4 py-4'>
+                            <label className={`border p-2 flex flex-col items-center rounded-lg ${localFilters['BusType'].includes('mass') ? 'bg-[#005587db]  text-white' : ' border-slate-300'}`}>
+                              <input type='checkbox' value='mass' className='hidden'
+                                checked={localFilters['BusType'].includes('mass')}
+                                onChange={(e) => OnTarvelModeSelected(e,'BusType')}
                               />
-                              <img
-                                src='/icons/massbus.svg'
-                                alt='massbus'
-                                className='h-8 w-8 '
-                              />
+                              <img  alt='massbus' className='h-8 w-8'  src={`${localFilters['BusType'].includes('mass') ? '/icons/White_massbus.svg' : '/icons/Black_massbus.svg'}`}/>
                               <p className='text-base pt-1'>Mass Bus</p>
                             </label>
-                            <label
-                              className={`border border-slate-400 p-2 rounded-lg ${
-                                localFilters['BusType'].includes('bulka')
-                                  ? 'bg-[#005687]'
-                                  : 'bg-[#e2e1e1]'
-                              }`}>
-                              <input
-                                onChange={(e) =>
-                                  OnTarvelModeSelected(e, 'BusType')
-                                }
-                                type='checkbox'
-                                value='bulka'
-                                checked={localFilters['BusType'].includes(
-                                  'bulka'
-                                )}
-                                className='hidden'
+
+                            <label className={`border p-2 flex flex-col items-center rounded-lg ${localFilters['BusType'].includes('bulka') ? 'bg-[#005587db] text-white' : 'border-slate-300'}`}>
+                              <input className='hidden' type='checkbox' value='bulka'
+                                checked={localFilters['BusType'].includes('bulka')}
+                                onChange={(e) => OnTarvelModeSelected(e,'BusType')}
                               />
-                              <img
-                                src='/icons/Bulkabus.svg'
-                                alt='bulkabus'
-                                className='h-8 w-8 '
-                              />
+                              <img alt='bulkabus' className='h-8 w-8' src={`${localFilters['BusType'].includes('bulka') ? '/icons/White_Bulkabus.svg' : '/icons/Black_Bulkabus.svg'}`}/>
                               <p className='text-base pt-1'>Bulka Bus</p>
                             </label>
                           </div>
-                          <p className=' border-b border-slate-500 h-2 w-full'></p>
+                          <p className='border-b border-slate-500 h-2 w-full'></p>
                         </div>
 
                         {/* Bus Departure */}
                         <div>
-                          <h1 className='font-bold'>
-                            Departure From AL-Mukalla
-                          </h1>
+                          <h1 className='font-bold pt-4'>Departure From AL-Mukalla</h1>
                           <div className='flex items-center gap-x-2 py-4'>
-                            <label
-                              className={`border border-slate-400 p-2 rounded-lg ${
-                                localFilters['Departure'].includes('morning')
-                                  ? 'bg-[#005687]'
-                                  : 'bg-[#e2e1e1]'
-                              }`}>
-                              <input
-                                onChange={(e) =>
-                                  OnTarvelModeSelected(e, 'Departure')
-                                }
-                                type='checkbox'
-                                value='morning'
-                                checked={localFilters['Departure'].includes(
-                                  'morning'
-                                )}
-                                className='hidden'
+                            <label className={`h-20 w-20 border py-2 flex flex-col items-center rounded-lg ${localFilters['Departure'].includes('morning') ?'bg-[#005587db] text-white' : ' border-slate-300'}`}>
+                              <input className='hidden' type='checkbox' value='morning' checked={localFilters['Departure'].includes('morning')}
+                                onChange={(e) => OnTarvelModeSelected(e, 'Departure')}
                               />
-                              <img
-                                src='/icons/Morning.svg'
-                                alt='massbus'
-                                className='h-8 w-8 '
+                              <img className='h-8 w-8' alt='massbus'
+                                src={`${localFilters['Departure'].includes('morning') ? '/icons/White_Morning.svg' : '/icons/Black_Morning.svg'}`}  
                               />
                               <p className='text-base pt-1'>Morning</p>
                             </label>
 
-                            <label
-                              className={`border border-slate-400 p-2 rounded-lg ${
-                                localFilters['Departure'].includes('evening')
-                                  ? 'bg-[#005687]'
-                                  : 'bg-[#e2e1e1]'
-                              }`}>
-                              <input
-                                onChange={(e) =>
-                                  OnTarvelModeSelected(e, 'Departure')
-                                }
-                                type='checkbox'
+                            <label className={`h-20 w-20 border p-2 flex flex-col items-center rounded-lg ${localFilters['Departure'].includes('evening') ? 'bg-[#005587db] text-white' : ' border-slate-300'}`}>
+                              <input 
+                                className='hidden' 
+                                type='checkbox' 
                                 value='evening'
-                                checked={localFilters['Departure'].includes(
-                                  'evening'
-                                )}
-                                className='hidden'
+                                onChange={(e) =>OnTarvelModeSelected(e, 'Departure')}
+                                checked={localFilters['Departure'].includes('evening')}
                               />
-                              <img
-                                src='/icons/Evening.svg'
-                                alt='evening'
-                                className='h-8 w-8 '
-                              />
+                              <img className='h-8 w-8' alt='evening' src= {`${localFilters['Departure'].includes('evening') ? '/icons/White_Evening.svg' : ' /icons/Black_Evening.svg'}`} />
                               <p className='text-base pt-1'>Evening</p>
                             </label>
                           </div>
@@ -226,106 +167,68 @@ function FilterGroup({
 
                         {/* Bus Rating */}
                         <div>
-                          <h1 className='font-bold pt-6'>Bus Rating</h1>
-                          <div className='flex items-center gap-x-2 py-4'>
-                            <label
-                              className={`border border-slate-400 p-2 rounded-full w-fit flex  justify-center items-center ${
-                                localFilters['Rating'].includes(4)
-                                  ? 'bg-[#005687]'
-                                  : 'bg-[#e2e1e1]'
-                              }`}>
-                              <input
-                                onChange={(e) =>
-                                  OnTarvelModeSelected(e, 'Rating')
-                                }
-                                type='checkbox'
-                                value={4}
-                                checked={localFilters['Rating'].includes(4)}
-                                className='hidden'
+                          <h1 className='font-bold pt-4'>Bus Rating</h1>
+                          <div className='flex items-center flex-wrap gap-2 py-4'>
+                            <label className={`border p-2 rounded-full w-fit flex  justify-center items-center ${localFilters['Rating'].includes(4) ? 'bg-[#005587db] text-white' : ' border-slate-300'}`}>
+                              <input className='hidden' type='checkbox' value={4}
+                                  checked={localFilters['Rating'].includes(4)}
+                                  onChange={(e) =>OnTarvelModeSelected(e, 'Rating')}
                               />
-                              <img
-                                src='/icons/StarIcon.svg'
-                                alt='massbus'
-                                className='h-8 w-8 '
-                              />
-                              <p className='text-base pt-1'>4 & above</p>
+                              <img className='h-8 w-8' alt='massbus'
+                                src= {`${localFilters['Rating'].includes(4) ? '/icons/White_StarIcon.svg' : '/icons/Black_StarIcon.svg'}`}
+                                />
+                              <p className='text-base'>4 & above</p>
                             </label>
 
-                            <label
-                              className={`border border-slate-400 p-2 rounded-full w-fit flex  justify-center items-center ${
-                                localFilters['Rating'].includes(3)
-                                  ? 'bg-[#005687]'
-                                  : 'bg-[#e2e1e1]'
-                              }`}>
+                            <label className={`border p-2 rounded-full w-fit flex  justify-center items-center ${localFilters['Rating'].includes(3) ? 'bg-[#005587db] text-white' : ' border-slate-300'}`}>
                               <input
-                                onChange={(e) =>
-                                  OnTarvelModeSelected(e, 'Rating')
-                                }
+                                className='hidden'
                                 type='checkbox'
-                                checked={localFilters['Rating'].includes(3)}
                                 value={3}
-                                className='hidden'
+                                checked={localFilters['Rating'].includes(3)}
+                                onChange={(e) => OnTarvelModeSelected(e,'Rating') }
                               />
-                              <img
-                                src='/icons/StarIcon.svg'
-                                alt='massbus'
-                                className='h-8 w-8 '
+                              <img className='h-8 w-8'alt='massbus'
+                                src= {`${localFilters['Rating'].includes(3) ? '/icons/White_StarIcon.svg' : '/icons/Black_StarIcon.svg'}`}
                               />
-                              <p className='text-base pt-1'>3 & above</p>
+                              <p className='text-base'>3 & above</p>
                             </label>
 
-                            <label
-                              className={`border border-slate-400 p-2 rounded-full w-fit flex  justify-center items-center ${
-                                localFilters['Rating'].includes(2)
-                                  ? 'bg-[#005687]'
-                                  : 'bg-[#e2e1e1]'
-                              }`}>
-                              <input
-                                onChange={(e) =>
-                                  OnTarvelModeSelected(e, 'Rating')
-                                }
-                                type='checkbox'
-                                value={2}
+                            <label className={`border p-2 rounded-full w-fit flex  justify-center items-center ${localFilters['Rating'].includes(2) ? 'bg-[#005587db] text-white' : ' border-slate-300'}`}>
+                              <input 
+                                className='hidden' 
+                                type='checkbox' value={2} 
                                 checked={localFilters['Rating'].includes(2)}
-                                className='hidden'
+                                onChange={(e) => OnTarvelModeSelected(e, 'Rating')}
                               />
-                              <img
-                                src='/icons/StarIcon.svg'
-                                alt='massbus'
-                                className='h-8 w-8 '
-                              />
-                              <p className='text-base pt-1'>2 & above</p>
+                              <img className='h-8 w-8' alt='massbus'
+                                src= {`${localFilters['Rating'].includes(2) ? '/icons/White_StarIcon.svg' : '/icons/Black_StarIcon.svg'}`}
+                                />
+                              <p className='text-base'>2 & above</p>
                             </label>
                           </div>
-                          <p className=' border-b border-slate-500 h-2 w-full'></p>
+                          <p className='border-b border-slate-500 h-2 w-full'></p>
                         </div>
 
                         {/* Bus Cost */}
 
                         <div>
-                          <h1 className='font-bold pt-6'>Cost</h1>
+                          <h1 className='font-bold pt-4'>Cost</h1>
                           <div className='flex flex-col justify-center items-center gap-y-5'>
                             <div className='flex justify-center items-center gap-x-5'>
                               <div className='flex flex-col items-center'>
                                 <h1>Min</h1>
-                                <p className='h-6 w-20 border border-slate-300 rounded-lg '></p>
+                                <p className='h-6 w-20 border border-slate-300 rounded-lg text-center'>0</p>
                               </div>
 
                               <div className='flex flex-col items-center'>
                                 <h1>Max</h1>
-                                <p className='h-6 w-20 border border-slate-300 rounded-lg '></p>
+                                <p className='w-20 border border-slate-300 rounded-lg text-center'>0</p>
                               </div>
                             </div>
-                            <div>
-                              <label
-                                htmlFor=''
-                                className='h-auto'>
-                                <input
-                                  type='range'
-                                  min='0'
-                                  max='1000'
-                                />
-                              </label>
+                            <div className='h-auto w-64 bg-blak relative flex z-0  '>
+                              <input type='range' min='0' max='1000' className='  bg-slate-50 z-0  absolute w-full outline-none float-right' />
+                              <input type='range' min='0' max='1000' className=' bg-slate-50 z-10 absolute w-full outline-none float-left' />
                             </div>
                           </div>
                         </div>
