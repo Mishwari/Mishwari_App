@@ -2,7 +2,7 @@
     {
         "country_id": "1",
         "sortname": "SEI",
-        "country_name": "Seiyon",
+        "country_name": "سيئون",
         "states": [
             {
                 "state_id": "164",
@@ -29,7 +29,7 @@
     {
         "country_id": "2",
         "sortname": "AL-",
-        "country_name": "AL-Mukalla",
+        "country_name": "المكلا",
         "states": [
             {
                 "state_id": "164",
@@ -56,7 +56,7 @@
     {
         "country_id": "3",
         "sortname": "ADE",
-        "country_name": "Aden",
+        "country_name": "عدن",
         "states": [
             {
                 "state_id": "164",
@@ -83,7 +83,7 @@
     {
         "country_id": "4",
         "sortname": "ATA",
-        "country_name": "Ataq",
+        "country_name": "عتق",
         "states": [
             {
                 "state_id": "164",
@@ -110,7 +110,7 @@
     {
         "country_id": "5",
         "sortname": "TAR",
-        "country_name": "Tarim",
+        "country_name": "تريم",
         "states": [
             {
                 "state_id": "164",
@@ -137,7 +137,7 @@
     {
         "country_id": "6",
         "sortname": "TAI",
-        "country_name": "Taiz",
+        "country_name": "تعز",
         "states": [
             {
                 "state_id": "164",
@@ -164,7 +164,7 @@
     {
         "country_id": "7",
         "sortname": "SAN",
-        "country_name": "Sana'a",
+        "country_name": "صنعاء",
         "states": [
             {
                 "state_id": "164",
@@ -191,7 +191,7 @@
     {
         "country_id": "8",
         "sortname": "AL-",
-        "country_name": "AL-Qaten",
+        "country_name": "القطن",
         "states": [
             {
                 "state_id": "164",
@@ -218,7 +218,7 @@
     {
         "country_id": "9",
         "sortname": "SHE",
-        "country_name": "Shehen",
+        "country_name": "شحن",
         "states": [
             {
                 "state_id": "164",
@@ -245,7 +245,7 @@
     {
         "country_id": "10",
         "sortname": "AL-",
-        "country_name": "AL-Wadeiya",
+        "country_name": "الوديعة",
         "states": [
             {
                 "state_id": "164",
@@ -272,7 +272,7 @@
     {
         "country_id": "11",
         "sortname": "MAR",
-        "country_name": "Marib",
+        "country_name": "مأرب",
         "states": [
             {
                 "state_id": "164",
@@ -299,7 +299,7 @@
     {
         "country_id": "12",
         "sortname": "AL-",
-        "country_name": "AL-Hudaidah",
+        "country_name": "الحديدة",
         "states": [
             {
                 "state_id": "164",
@@ -326,7 +326,7 @@
     {
         "country_id": "13",
         "sortname": "EBB",
-        "country_name": "Ebb",
+        "country_name": "إب",
         "states": [
             {
                 "state_id": "164",
@@ -353,7 +353,7 @@
     {
         "country_id": "14",
         "sortname": "AL-",
-        "country_name": "AL-Bidaa",
+        "country_name": "البيضاء",
         "states": [
             {
                 "state_id": "164",

@@ -19,9 +19,9 @@ const SortDropdown = ({ selectedSort, setSelectedSort, sortList }: SortDropdownP
         <Listbox value={selectedSort} onChange={setSelectedSort}>
             {({ open }) => (
                 <>
-                    <div className="relative">
+                    <div className="relative z-40">
                         <Listbox.Button className="flex gap-1 focus:outline-none">
-                            <span className="">Sort: {selectedSort.name}</span>
+                            <span className="">ترتيب: {selectedSort.name}</span>
                             <span className="items-center">
                                 <Image
                                     src='/icons/downArrow.svg'
@@ -35,11 +35,15 @@ const SortDropdown = ({ selectedSort, setSelectedSort, sortList }: SortDropdownP
                         <Transition
                             show={open}
                             as={React.Fragment}
+                            enter='transition ease-out duration-700'
+                            enterFrom='opacity-0'
+                            enterTo='opacity-100'
                             leave="transition ease-in duration-100"
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
+                        
                         >
-                            <Listbox.Options className="absolute mt-1 w-[100] bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                            <Listbox.Options className="absolute mt-100 w-[100] bg-white shadow-lg max-h-60 rounded-md py-1 text-base 5ring-1 ring-black ring-opacity-5 overflow-y-visible focus:outline-none sm:text-sm">
                                 {sortList.map((listItem) => (
                                     <Listbox.Option
                                         key={listItem.id}
@@ -52,21 +56,23 @@ const SortDropdown = ({ selectedSort, setSelectedSort, sortList }: SortDropdownP
                                         value={listItem}
                                     >
                                         {({ selected, active }) => (
-                                            <div className='flex w-max justify-between'>
-                                                <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'mr-4 block truncate')}>
-                                                    {listItem.name}
-                                                </span>
-
+                                            <div className='flex w-full justify-between '>
+                                                
                                                 {selectedSort.id == listItem.id && (
                                                     <span
                                                         className={classNames(
                                                             active ? 'text-white' : 'text-indigo-600',
-                                                            'absolute inset-y-0 right-0 flex items-center pr-4 '
+                                                            'absolute inset-y-0 left-0 flex items-center pl-2 '
                                                         )}
                                                     >
                                                         <Image src='/icons/checkListIcon.svg' alt="checkListIcon" className="stroke-[blue]" width={20} height={20} />
                                                     </span>
                                                 )}
+
+                                                <span className={classNames(selected ? 'font-bold' : 'font-normal', 'w-full text-right ml-8 block truncate')}>
+                                                    {listItem.name}
+                                                </span>
+
                                             </div>
                                         )}
                                     </Listbox.Option>
