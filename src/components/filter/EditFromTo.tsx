@@ -3,11 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import FromToInputComponent from '../FromToInputComponent'
 import Testdata from '../testdata.json'
 import { useRouter } from 'next/router';
-
-const list = Testdata.map(item => ({
-  id: item.country_id,
-  name: item.country_name
-}));
+import axios from 'axios';
 
 interface EditFromToProps  {
   isEditFromTo:boolean;
@@ -17,11 +13,42 @@ interface EditFromToProps  {
 
 }
 
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+
 function EditFromTo({
   isEditFromTo,setIsEditFromTo,
   pickup,destination
   // ,setPickup,setDestination
 }:EditFromToProps) {
+
+  const [list, setList] = useState<any>([]);
+
+
+
+  useEffect(() => {
+    const fetchCityList = async () => {
+      try {
+        const response = await axios.get(`${apiBaseUrl}city-list`)
+        setList(response.data)
+      } catch (err:any) {
+        setList([])
+      
+
+        console.log('Error Message: ', err.message);
+        if (err.response) {
+          console.error('Error response:', err.response.data);
+          console.error('Error response status:', err.response.status);
+          console.error('Error response headers:', err.response.headers);
+        } else if (err.request) {
+          console.error('Error request:', err.request);
+        } else {
+          console.error('Error message:', err.message);
+        }
+      }
+    }
+    fetchCityList();
+  },[])
 
 
   useEffect(() => {

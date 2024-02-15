@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, Fragment } from 'react';
+ import React, { useEffect, useState, useRef, Fragment } from 'react';
 import { Dialog } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -74,7 +74,8 @@ function index() {
 
     const fetchTrips = async () => {
       try {
-        const response = await axios.get(`${apiBaseUrl}trips/?pickup=${router.query.pickup}&destination=${router.query.destination}`);
+        const response = await axios.get(`${apiBaseUrl}test-get/?pickup=${router.query.pickup}&destination=${router.query.destination}`);
+        // const response = await axios.get(`${apiBaseUrl}test-get/`);
         setFilteredTrips(response.data);
       } catch (err:any) {
         console.log('Error Message: ', err.message);

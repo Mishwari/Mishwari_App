@@ -42,13 +42,13 @@ const InputField = ({list,selected,setSelected}:InputFieldProps) => {
   const filteredList = query === ''
     ? list
     : list.filter((item:any) =>
-        item.name.toLowerCase().includes(query.toLowerCase())
+        item.city.toLowerCase().includes(query.toLowerCase())
       );
       
 
   const handleSelect = (item:any) => {
-    setSelected(item.name);
-    setQuery(item.name);
+    setSelected(item.city);
+    setQuery(item.city);
     setShowDropdown(false);
     setIsFocused(false);
   };
@@ -79,7 +79,7 @@ const InputField = ({list,selected,setSelected}:InputFieldProps) => {
 
   const handleInputBlur = () => {
     setTimeout(() => {
-      if (!dropdownRef?.current.contains(document.activeElement)) {
+      if (!dropdownRef?.current?.contains(document.activeElement)) {
         setShowDropdown(false);
         setIsFocused(false);
         if (!selected) {
@@ -145,15 +145,15 @@ const InputField = ({list,selected,setSelected}:InputFieldProps) => {
           {filteredList.length === 0 && query !== '' ? (
             <li className=" text-gray-700">لاتوجد مدينة بهذا الاسم</li>
           ) : (
-            filteredList.map((item: { name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | PromiseLikeOfReactNode | null | undefined; }, index: Key | null | undefined) => (
+            filteredList.map((item: { city: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | PromiseLikeOfReactNode | null | undefined; }, index: Key | null | undefined) => (
               <li
                 key={index}
                 className={`p-2 cursor-pointer  hover:bg-[#005687] hover:text-white hover:font-bold ${
-                  selected && item.name === selected ? 'bg-[#005687] hover:bg-[#00558791] text-white font-bold' : ''
+                  selected && item.city === selected ? 'bg-[#005687] hover:bg-[#00558791] text-white font-bold' : ''
                 }`}
                 onClick={() => handleSelect(item)}
               >
-                {item.name}
+                {item.city}
               </li>
             ))
           )}

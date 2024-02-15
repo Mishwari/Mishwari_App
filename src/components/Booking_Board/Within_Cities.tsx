@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Testdata from '../testdata.json';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import InputField from './InputField';
 import FromToInputComponent from '../FromToInputComponent';
+import axios from 'axios';
+
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 
 function Within_Cities() {
   const [stateName, setStateName] = useState<string>();
@@ -12,11 +16,35 @@ function Within_Cities() {
   const [selectFrom, setSelectFrom] = useState<any>();
   const [selectTo, setSelectTo] = useState<any>();
   const [selectedMethods, setselectedMethods] = useState<string[]>([]);
+  const [list, setList] = useState<any>([]);
 
-  const list = Testdata.map((item) => ({
-    id: item.country_id,
-    name: item.country_name,
-  }));
+
+
+  useEffect(() => {
+    const fetchCityList = async () => {
+      try {
+        const response = await axios.get(`${apiBaseUrl}city-list`)
+        setList(response.data)
+      } catch (err:any) {
+        setList([])
+      
+
+        console.log('Error Message: ', err.message);
+        if (err.response) {
+          console.error('Error response:', err.response.data);
+          console.error('Error response status:', err.response.status);
+          console.error('Error response headers:', err.response.headers);
+        } else if (err.request) {
+          console.error('Error request:', err.request);
+        } else {
+          console.error('Error message:', err.message);
+        }
+      }
+    }
+    fetchCityList();
+  },[])
+
+
 
   const Toggle_Selected_City = (e: any) => {
     const getCountryName = e.target.value;
@@ -58,8 +86,8 @@ function Within_Cities() {
       <form
         onSubmit={handleSubmit}
         className='flex flex-col justify-center items-center'>
-        <div className='md:max-w-7xl pl-3 pr-2 md:pl-3 md:pr-2 py-2 h-fit rounded-3xl border border-slate-400 w-auto'>
-          <div className='pr-7  pb-3 relative'>
+        <div className='md:max-w-7xl pl-3 pr-2 md:pl-3 md:pr-2 py-4 h-fit rounded-3xl border border-slate-400 w-auto'>
+          <div className='pr-7  pb-[12.5px] relative'>
             <h1 className='text-right font-regular text-sm text-[#676767] pt-3'>
               المدينة
             </h1>
@@ -79,76 +107,6 @@ function Within_Cities() {
             isEditFromTo={false}
           />
 
-          <div className='px-2'>
-            <h1 className='text-right font-semibold text-md text-[#676767] pt-4'>
-              {' '}
-              وسيلة النقل
-            </h1>
-            <div className='flex flex-wrap  gap-x-2 pt-2'>
-              <label
-                className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${
-                  selectedMethods.includes('Bike')
-                    ? 'bg-[#005687] border-2 border-black'
-                    : 'bg-[#e2e1e1]'
-                }`}>
-                <input
-                  onChange={(e) => OnTarvelModeSelected(e)}
-                  type='checkbox'
-                  value='bus'
-                  className=' hidden checked:bg-black'
-                />
-                <Image
-                  alt='bus'
-                  src='./bus.svg'
-                  height={40}
-                  width={40}
-                  className='h-20 w-16 pb-2'
-                />
-              </label>
-
-              <label
-                className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${
-                  selectedMethods.includes('bulkabus')
-                    ? 'bg-[#005687] border-2 border-black'
-                    : 'bg-[#e2e1e1]'
-                }`}>
-                <input
-                  onChange={(e) => OnTarvelModeSelected(e)}
-                  type='checkbox'
-                  value='bulkabus'
-                  className=' hidden checked:bg-black'
-                />
-                <Image
-                  alt='bulkabus'
-                  src='./bulka_bus.svg'
-                  height={20}
-                  width={20}
-                  className='h-14 w-16 mt-7 '
-                />
-              </label>
-
-              <label
-                className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${
-                  selectedMethods.includes('Car')
-                    ? 'bg-[#005687] border-2 border-black'
-                    : 'bg-[#e2e1e1]'
-                }`}>
-                <input
-                  onChange={(e) => OnTarvelModeSelected(e)}
-                  type='checkbox'
-                  value='Car'
-                  className=' hidden checked:bg-black'
-                />
-                <Image
-                  alt='car'
-                  src='./car.svg'
-                  height={20}
-                  width={20}
-                  className='h-14 w-16 mt-7 '
-                />
-              </label>
-            </div>
-          </div>
         </div>
         <button
           type='submit'

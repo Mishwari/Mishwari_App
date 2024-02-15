@@ -1,11 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+
 
 function convertToReadableTime(isoString:string) {
   const date = new Date(isoString);
   let hours = date.getHours();
   const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const ampm = hours >= 12 ? 'مساءاً' : 'صباحاً';
 
   hours = hours % 12;
   hours = hours || 12; // the hour '0' should be '12'
@@ -23,7 +25,7 @@ function calculateDuration(departure:any, arrival:any) {
   const hours = Math.floor(difference / 3600000); // convert milliseconds to hours
   const minutes = Math.floor((difference % 3600000) / 60000); // convert remaining milliseconds to minutes
 
-  return `${hours}h ${minutes}m`;
+  return `${hours}س ${minutes}د`;
 }
 
 interface TripProps {
@@ -66,8 +68,20 @@ function TripBox({ trip }: TripProps) {
     trip.arrival_time
   );
 
+  console.log("trip: ",trip)
+  const router = useRouter();
+  const handleTripClick = () => {
+    router.push({
+      pathname: '/bus_list/trip_details',
+      query: {
+        trip_id: trip?.id
+      },
+    });
+  }
+
   return (
     <div
+      onClick={handleTripClick}
       className='mt-3 justify-center sm:flex sm:gap-64 '
       style={{
         border: ' 0.5px solid #A4A4A4',
@@ -104,7 +118,8 @@ function TripBox({ trip }: TripProps) {
             <h1 className='font-bold'>
               {formattedDepartureTime} - {formattedArrivalTime}
             </h1>
-            <h1 className='text-sm font-light'>({tripDuration})</h1>
+            {/** duration: */}
+            {/* <h1 className='text-sm font-light'>({tripDuration})</h1> */}
           </div>
           <div className='flex gap-4 pt-2'>
             {trip.driver?.is_ac ? (

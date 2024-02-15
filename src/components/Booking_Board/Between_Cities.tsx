@@ -7,6 +7,11 @@ import 'react-day-picker/dist/style.css';
 import { useRouter } from 'next/router';
 import InputField from './InputField';
 import FromToInputComponent from '../FromToInputComponent';
+import axios from 'axios';
+
+
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 
 function Between_Cities() {
   const [Countrystate, setCountrystate] = useState<any>([]);
@@ -16,11 +21,36 @@ function Between_Cities() {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [togglecalenderbutton, settogglecalenderbutton] = useState<any>(false);
 
-  const list = Testdata.map((item) => ({
-    id: item.country_id,
-    name: item.country_name,
-  }));
+  const [list, setList] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchCityList = async () => {
+      try {
+        const response = await axios.get(`${apiBaseUrl}city-list`)
+        setList(response.data)
+      } catch (err:any) {
+        setList([])
+        console.log('Error Message: ', err.message);
+        if (err.response) {
+          console.error('Error response:', err.response.data);
+          console.error('Error response status:', err.response.status);
+          console.error('Error response headers:', err.response.headers);
+        } else if (err.request) {
+          console.error('Error request:', err.request);
+        } else {
+          console.error('Error message:', err.message);
+        }
+      }
+    }
+    fetchCityList();
+  },[])
+
+  // const list = Testdata.map((item) => ({
+  //   id: item.country_id,
+  //   name: item.country_name,
+  // }));
   // const dateString = selectedDate ? selectedDate.toDateString() : 'No date selected';
+
 
   const Toggle_Selected_City = (e: any) => {
     const getCountryName = e.target.value;
@@ -98,7 +128,7 @@ function Between_Cities() {
       <form
         onSubmit={handleSubmit}
         className='flex flex-col justify-center items-center'>
-        <div className='md:max-w-7xl pl-3 pr-2 md:pl-3 md:pr-2 py-2 h-fit rounded-3xl border border-slate-400 w-auto'>
+        <div className='md:max-w-7xl pl-3 pr-2 md:pl-3 md:pr-2 py-4 h-fit rounded-3xl border border-slate-400 w-auto'>
           <FromToInputComponent
             list={list}
             selectFrom={selectfromCity}
@@ -142,7 +172,7 @@ function Between_Cities() {
                       />
                     </div>
                   )}
-                  <p className='pr-1 md:pr-2 font-medium text-sm md:text-large text-[#676767]'>
+                  <p className='pl-2 md:pl-4 font-medium text-sm md:text-large text-[#676767]'>
                     {selectedDate
                       ? format(selectedDate, 'dd/MM/yyyy')
                       : 'حدد التاريخ'}
@@ -160,77 +190,10 @@ function Between_Cities() {
               </div>
             </div>
 
-            <div>
-              {' '}
-              {/* Methods */}
-              <h1 className='text-right font-semibold text-md text-[#676767] pt-3.5'>
-                وسيلة النقل
-              </h1>
-              <div className='flex gap-x-2 pt-2'>
-                <label
-                  className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${
-                    selectedMethods.includes('bulkabus')
-                      ? 'bg-[#005687] border-2 border-black'
-                      : 'bg-[#e2e1e1]'
-                  }`}>
-                  <input
-                    onChange={OnTarvelModeSelected}
-                    type='checkbox'
-                    value='bulkabus'
-                    className=' hidden checked:bg-black'
-                  />
-                  <Image
-                    alt='bulkabus'
-                    src='./bulka_bus.svg'
-                    height={20}
-                    width={20}
-                    className='h-14 w-16 mt-7 '
-                  />
-                </label>
-
-                <label
-                  className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${
-                    selectedMethods.includes('Car')
-                      ? 'bg-[#005687] border-2 border-black'
-                      : 'bg-[#e2e1e1]'
-                  }`}>
-                  <input
-                    onChange={OnTarvelModeSelected}
-                    type='checkbox'
-                    value='Car'
-                    className=' hidden checked:bg-black'
-                  />
-                  <Image
-                    alt='car'
-                    src='./car.svg'
-                    height={20}
-                    width={20}
-                    className='h-14 w-16 mt-7'
-                  />
-                </label>
-
-                <label
-                  className={`flex flex-col items-center justify-center border w-20 h-14 rounded-lg border-[#005687] overflow-hidden ${
-                    selectedMethods.includes('Bike')
-                      ? 'bg-[#005687] border-2 border-black'
-                      : 'bg-[#e2e1e1]'
-                  }`}>
-                  <input
-                    onChange={OnTarvelModeSelected}
-                    type='checkbox'
-                    value='Bike'
-                    className=' hidden checked:bg-black'
-                  />
-                  <Image
-                    alt='bulkabus'
-                    src='./bike.svg'
-                    height={20}
-                    width={20}
-                    className='h-14 w-16'
-                  />
-                </label>
-              </div>
-            </div>
+             {/* 
+             
+             */}
+     
           </div>
         </div>
         <button
