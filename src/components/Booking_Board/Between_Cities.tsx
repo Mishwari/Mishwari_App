@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Testdata from '../testdata.json';
 import Image from 'next/image';
 import { addDays, format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
@@ -52,13 +51,13 @@ function Between_Cities() {
   // const dateString = selectedDate ? selectedDate.toDateString() : 'No date selected';
 
 
-  const Toggle_Selected_City = (e: any) => {
-    const getCountryName = e.target.value;
-    const selectedcity: any = Testdata?.find(
-      (x) => x.country_name === getCountryName
-    );
-    setCountrystate(selectedcity);
-  };
+  // const Toggle_Selected_City = (e: any) => {
+  //   const getCountryName = e.target.value;
+  //   const selectedcity: any = Testdata?.find(
+  //     (x) => x.country_name === getCountryName
+  //   );
+  //   setCountrystate(selectedcity);
+  // };
 
   const OnTarvelModeSelected = (e: any) => {
     const selectedvalue = e.target.value;
@@ -128,7 +127,7 @@ function Between_Cities() {
       <form
         onSubmit={handleSubmit}
         className='flex flex-col justify-center items-center'>
-        <div className='md:max-w-7xl pl-3 pr-2 md:pl-3 md:pr-2 py-4 h-fit rounded-3xl border border-slate-400 w-auto'>
+        <div className='umd:max-w-7xl pl-3 pr-2 md:pl-3 md:pr-2 py-4 h-fit rounded-3xl border bg-white border-slate-400 w-auto'>
           <FromToInputComponent
             list={list}
             selectFrom={selectfromCity}
@@ -141,7 +140,6 @@ function Between_Cities() {
           <div className='px-2'>
             <div>
               {' '}
-              {/* Dep Date  */}
               <h1 className='text-right font-semibold text-md text-[#676767] pt-4 pb-2'>
                 تاريخ المغادرة
               </h1>
@@ -190,10 +188,7 @@ function Between_Cities() {
               </div>
             </div>
 
-             {/* 
-             
-             */}
-     
+        
           </div>
         </div>
         <button

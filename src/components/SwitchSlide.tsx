@@ -2,23 +2,23 @@ import React, { useState } from 'react'
 
 
 interface SwitchSlideProp{
-  initial?:boolean;
+  initial?:string;
   setInitial?:any;
 }
 function SwitchSlide({initial, setInitial}:SwitchSlideProp) {
-  // const [female, setFemale] = useState:(false)
+  // const [female, setFemale] = useState:(false)c
+  console.log('SwitchSlide: ', initial)
 
-  console.log(initial)
   return (
-    <div onClick={() => setInitial(!initial)}
-     className={`relative flex w-full rounded-[17px] cursor-pointer mb-1 border-2 ${!initial? 'border-[#005687]':'border-[#cf357d]'} text-lg font-bold text-center  items-center overflow-hidden `}>
-        <div className={`py-1 sm:py-2 px-4 z-10  w-1/2 bg-transparent  duration-150 ${!initial? ' text-white':''}  `}>
-            رجل
+    <div onClick={() => setInitial(initial === 'male' ? 'female' : 'male')}
+     className={`relative flex w-full rounded-[17px] cursor-pointer mb-1 border-2 ${initial === 'male'? 'border-[#005687]':'border-[#cf357d]'} text-lg font-bold text-center  items-center overflow-hidden `}>
+        <div className={`py-1 sm:py-2 px-4 z-10  w-1/2 bg-transparent  duration-150 ${initial === 'male'?'text-white ':''}  `}>
+            ذكر
         </div>
-        <div className={`py-1 sm:py-2 px-4 z-10 w-1/2 bg-transparent duration-150 ${initial? ' text-white':''}`}>
-            امرأة
+        <div className={`py-1 sm:py-2 px-4 z-10 w-1/2 bg-transparent duration-150 ${initial === 'female'? ' text-white':''}`}>
+            انثى
         </div>
-        <div className={`absolute w-1/2 h-full   rounded-[14px] scale-x-125 scale-y-105  transition-transform duration-300 ease-in-out ${initial? '-translate-x-full bg-[#cf357d]':'bg-[#005687] '}  `}>
+        <div className={`absolute w-1/2 h-full   rounded-[14px] scale-x-125 scale-y-105  transition-transform duration-300 ease-in-out ${initial === 'female'?'-translate-x-full bg-[#cf357d]':'bg-[#005687] '}  `}>
 
         </div>
     </div>

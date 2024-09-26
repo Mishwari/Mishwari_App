@@ -4,13 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Mousewheel, FreeMode } from 'swiper/modules';
-import Trips from '../api/trips.json';
 import TripBox from '@/components/TripBox';
 import SortDropdown from '@/components/filters_bar/SortDropdown';
 import { useRouter } from 'next/router';
-import FilterGroup from '@/components/filters_bar/FilterGroup';
+import FilterGroupModal from '@/components/filters_bar/FilterGroupModal';
 import axios from 'axios';
 import EditFromTo from '@/components/filter/EditFromTo';
+import { Trip } from '@/types/trip'; // TODO
+import BackButton from '@/components/BackButton';
+import FilterGroup from '@/components/filters_bar/FilterGroup';
 
 export type SortItem = {
   id: number;
@@ -43,7 +45,7 @@ function index() {
     }
   }, [router.query, router.isReady]);
 
-  const [filteredTrips, setFilteredTrips] = useState<any[]>([]); //9 ref
+  const [filteredTrips, setFilteredTrips] = useState<Trip[]>([]); //9 ref
 
   const [finalFilteredTrips, setFinalFilteredTrips] = useState<object[]>([]);
 
@@ -74,7 +76,7 @@ function index() {
 
     const fetchTrips = async () => {
       try {
-        const response = await axios.get(`${apiBaseUrl}test-get/?pickup=${router.query.pickup}&destination=${router.query.destination}`);
+        const response = await axios.get(`${apiBaseUrl}trips/?pickup=${router.query.pickup}&destination=${router.query.destination}`);
         // const response = await axios.get(`${apiBaseUrl}test-get/`);
         setFilteredTrips(response.data);
       } catch (err:any) {
@@ -98,9 +100,9 @@ function index() {
     for (let i = 0; i < filteredTrips?.length; i++) {
       if (
         (filterBuses.BusType.length === 0 ||
-          filterBuses.BusType.includes(filteredTrips[i].driver.car_type)) &&
+          filterBuses.BusType.includes(filteredTrips[i].main_trip.bus.bus_type)) &&
         (filterBuses.Rating.length === 0 ||
-          filteredTrips[i].driver.driver_rating >
+          Number(filteredTrips[i].main_trip.driver?.driver_rating) >
             Math.min(...filterBuses.Rating)) &&
         filteredTrips[i].price >= Number(filterBuses.Min) &&
         filteredTrips[i].price <= Number(filterBuses.Max)
@@ -144,30 +146,22 @@ function index() {
     }
     //rate
     else if (selectedSort.id == 4) {
-      const sortedTrips = [...filteredTrips].sort(
-        (a, b) => b.driver.driver_rating - a.driver.driver_rating
+      const sortedTrips:Trip[] = [...filteredTrips].sort(
+        (a, b) => Number(b.main_trip.driver?.driver_rating) - Number(a.main_trip.driver?.driver_rating)
       );
       setFilteredTrips(sortedTrips);
     }
   }, [selectedSort]);
 
   return (
-    <div className='flex flex-col items-center  '>
-      <div className=' sticky top-0 w-full z-10 max-w-5xl bg-white overflow-x-hidden'>
+    <div className='flex flex-col items-center bg-[#F4FAFE] bg-scroll h-full '>
+      <div className='pb-4 sticky top-0 w-full z-10  bg-[#005687] overflow-hidden'>
         <section className='my-2'>
           <div className='flex justify-between items-center w-full'>
             <div className='flex items-center gap-4 pt-1 mr-2'>
-              <Link href='/'>
-                <Image
-                  src='/icons/leftArrow.svg'
-                  alt='leftArrow'
-                  height={30}
-                  width={30}
-                  className='rotate-180'
-                />
-              </Link>
+              <BackButton />
 
-              <div className=''>
+              <div className='text-white'>
                 <p className='text-right text-xs font-bold underline'>
                   {tripType == 1
                     ? `داخل المدينة / ${router.query.city}`
@@ -202,7 +196,7 @@ function index() {
           </div>
         </section>
         <section className='m-3 mt-5 '>
-          <div className='flex gap-2 '>
+          <div className='md:hidden flex gap-2 '>
             <div
               className='flex items-center justify-center rounded-full px-6  gap-1.5 w-[90px] h-[30px]'
               style={{
@@ -219,7 +213,7 @@ function index() {
             </div>
 
             {/* Filter Panel hidden by default its state: isOpen */}
-            <FilterGroup
+            <FilterGroupModal
               filterBuses={filterBuses}
               setFilterBuses={setFilterBuses}
               isFilterOpen={isFilterOpen}
@@ -227,7 +221,7 @@ function index() {
               filteredTrips={filteredTrips}
             />
 
-            <div className='items-start justify-start '>
+            <div className=' items-start justify-start '>
               <Swiper
                 style={{
                   overflowY: 'visible',
@@ -285,54 +279,65 @@ function index() {
         </section>
       </div>
 
-      <section className=' w-full px-5'>
-        <div
-          className='flex items-center rounded-xl border border-slate-200	p-2 mb-3 gap-2'
-          style={{ backgroundColor: 'azure' }}>
-          <Image
-            src='/icons/busFrontView.svg'
-            alt='bus front View'
-            width={20}
-            height={20}
-          />
-          <h2 className='m-0 text-xs font-[Inter] text-gray-500 font-light '>
-            <strong className='font-semibold text-black'>
-              {finalFilteredTrips.length}
-            </strong>{' '}
-            Buses found, Starting from{' '}
-            <strong className='font-semibold text-black'>
-              {minimumTrip}YR
-            </strong>{' '}
-            per passenger
-          </h2>
+      <section className=' w-full h-full px-4'>
+
+        <div className='h-full w-full mt-4 md:flex md:justify-between '>
+          <div className='hidden md:block sticky md:w-[35%] border-2 bg-white h-max mx-5 overflow-y-scroll scrollbar-hide'>
+          <FilterGroup filteredTrips={filteredTrips}  filterBuses={filterBuses} setFilterBuses={setFilterBuses} />
+          </div>
+
+            {/* Trips Component */}
+            {finalFilteredTrips.length !== 0 ? (
+              finalFilteredTrips.map((trip: any, index) => (
+                <div className='w-full md:w-[65%] overflow-y-auto h-screen'>
+                    <div
+                      className='flex items-center rounded-xl border border-slate-200	p-2 mb-3 gap-2'
+                      style={{ backgroundColor: 'azure' }}>
+                      <Image
+                        src='/icons/busFrontView.svg'
+                        alt='bus front View'
+                        width={20}
+                        height={20}
+                      />
+                      <h2 className='m-0 text-xs font-[Inter] text-gray-500 font-light '>
+                        <strong className='font-semibold text-black'>
+                          {finalFilteredTrips.length}
+                        </strong>{' '}
+                        باص وجد, تبدا من{' '}
+                        <strong className='font-semibold text-black'>
+                          {minimumTrip}ر.ي {' '}
+                        </strong>{' '}
+                        على الراكب
+                      </h2>
+                    </div>
+
+                <Link href={`/bus_list/${trip.id}`} key={index}>
+                  <TripBox
+                    trip={trip}
+                  />
+                </Link>
+                </div>
+                
+              )
+              )
+            ) : (
+              <div className='w-full  h-screen overflow-hidden   md:w-[65%] flex flex-col items-center  justify-start mt-8'>
+                <div className='w-4/12 max-w-xl flex justify-center'>
+                  <Image
+                    src='/images/busNotFound.png'
+                    alt='bus not found'
+                    width={300}
+                    height={300}
+                    // layout='responsive'
+                  />
+                </div>
+                <h1 className='text-2xl font-bold leading-10  place-items-center mt-2 text-center text-black'>
+                  لم يتم العثور على رحلات مطابقة لبحثك
+                </h1>
+              </div>
+            )}
         </div>
 
-        {/* Trips Component */}
-        {finalFilteredTrips.length !== 0 ? (
-          finalFilteredTrips.map((trip: any, index) => (
-            
-            <TripBox
-              trip={trip}
-              key={index}
-            />
-          )
-           )
-        ) : (
-          <div className='flex flex-col items-center justify-center mt-9'>
-            <div className='w-4/12 max-w-xl flex justify-center'>
-              <Image
-                src='/images/busNotFound.png'
-                alt='bus not found'
-                width={300}
-                height={300}
-                // layout='responsive'
-              />
-            </div>
-            <h1 className='text-2xl font-bold leading-10  place-items-center mt-2 text-center text-black'>
-              لم يتم العثور على رحلات مطابقة لبحثك
-            </h1>
-          </div>
-        )}
       </section>
     </div>
   );

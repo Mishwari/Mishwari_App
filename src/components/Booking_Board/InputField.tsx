@@ -121,14 +121,15 @@ const InputField = ({list,selected,setSelected}:InputFieldProps) => {
   }, []);
 
   return (
-    <div className="container relative w-64 sm:w-80 md:w-96  text-lg text-[#676767] h-10" ref={dropdownRef}>
+    <div className="container relative wf-64 sfm:w-80 mdf:w-96 w-full mdax-w-full  text-lg text-[#676767] h-max" ref={dropdownRef}>
       <input ref={loseAutoBlur}
-        className="w-full pb-1 border-b-2 border-[#005687] focus:outline-none font-bold "
-        value={isFocused ? query : (selected ? selected : 'اختر المدينة')}
+        className="w-full pcb-1 pr-2 bg-inherit bdorder-b-2 border-[#005687] focus:outline-none font-semibold "
+        value={isFocused ? query : (selected ? selected : 'اختر المدينة . . .')}
         onChange={handleInputChange}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
-        placeholder={!selected ? 'اختر المدينة' : selected}
+        placeholder={!selected ? 'اختر المدينة . . .' : selected}
+        required={true}
       />
         <Transition
         as={Fragment}
@@ -141,9 +142,9 @@ const InputField = ({list,selected,setSelected}:InputFieldProps) => {
         leaveTo="opacity-0"
       >
       {  (
-        <ul ref={containerRef} className="md:scrollbar-hide absolute w-full pt-2 z-10 text-lg max-h-60 overflow-auto bg-white border border-gray-100  shadow rounded-lg">
+        <ul ref={containerRef} className="md:scrollbar-hide scrollbar-default absolute w-full pt-2 z-20 text-lg max-h-60 overflow-auto bg-white border border-gray-100  shadow rounded-lg">
           {filteredList.length === 0 && query !== '' ? (
-            <li className=" text-gray-700">لاتوجد مدينة بهذا الاسم</li>
+            <li className=" text-gray-700">لاتوجد مدينة بهذا الاسم !</li>
           ) : (
             filteredList.map((item: { city: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | PromiseLikeOfReactNode | null | undefined; }, index: Key | null | undefined) => (
               <li

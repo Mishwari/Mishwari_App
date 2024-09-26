@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Testdata from '../testdata.json';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import InputField from './InputField';
@@ -46,14 +45,14 @@ function Within_Cities() {
 
 
 
-  const Toggle_Selected_City = (e: any) => {
-    const getCountryName = e.target.value;
-    const selectedcity: any = Testdata?.find(
-      (x) => x.country_name === getCountryName
-    );
-    setCountrystate(selectedcity);
-    setStateName(selectedcity.states);
-  };
+  // const Toggle_Selected_City = (e: any) => {
+  //   const getCountryName = e.target.value;
+  //   const selectedcity: any = Testdata?.find(
+  //     (x) => x.country_name === getCountryName
+  //   );
+  //   setCountrystate(selectedcity);
+  //   setStateName(selectedcity.states);
+  // };
 
   const OnTarvelModeSelected = (e: any) => {
     const selectedvalue = e.target.value;
@@ -86,7 +85,7 @@ function Within_Cities() {
       <form
         onSubmit={handleSubmit}
         className='flex flex-col justify-center items-center'>
-        <div className='md:max-w-7xl pl-3 pr-2 md:pl-3 md:pr-2 py-4 h-fit rounded-3xl border border-slate-400 w-auto'>
+        <div className='md:max-w-7xl pl-3 pr-2 md:pl-3 md:pr-2 py-4 h-fit rounded-3xl border bg-white border-slate-400 w-auto'>
           <div className='pr-7  pb-[12.5px] relative'>
             <h1 className='text-right font-regular text-sm text-[#676767] pt-3'>
               المدينة
